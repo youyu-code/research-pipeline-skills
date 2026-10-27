@@ -40,6 +40,8 @@ Agent Skills (Anthropic format) for running a literature-driven research pipelin
 
 Each skill is self-contained: `SKILL.md` plus `references/`, `scripts/`, `assets/`. Install only the ones you need — but `synthesis-matrix` consumes cards, so it is not useful without `paper-card`.
 
+**Examples.** [`examples/`](examples/) holds three cards built from public arXiv papers by these scripts — each one chosen because it broke something different — plus the record of a live radar attempt that was blocked before it reached the endpoint. No PDFs are redistributed; every card names the file it came from and the mode it was read in.
+
 ## 中文说明
 
 本仓库把「文献雷达 → 论文卡片 → 综合矩阵 → 提案锻造」整条科研流水线拆成可独立调用的 Agent Skills。
@@ -145,13 +147,13 @@ Three decisions that shape everything else:
 | Item | Status |
 |---|---|
 | `literature-radar` | v1 — SKILL.md + 5 references + 5 scripts |
-| `paper-card` | v1 — SKILL.md + 6 references + 5 scripts + synthetic fixtures |
+| `paper-card` | v1 — SKILL.md + 6 references + 5 scripts + synthetic fixtures · **live-proven 2026-10-27** on three public arXiv papers ([`examples/cards/`](examples/cards/)) |
 | `synthesis-matrix` | v1 — SKILL.md + 4 references |
 | `proposal-forge` | v1 — SKILL.md + 5 references |
 | `evidence-audit` | v1 — SKILL.md + 5 references |
 | `research-ops` | v1 — SKILL.md + 4 references + 1 script |
 | `paper-mill` | **planned** — ships as `proposal-forge/references/challenge-mode.md` until it has been run end to end on a real manuscript |
-| radar scripts (`scan` / `score` / `selfcheck` / `regress` / `miss_diag`) | **scripts shipped (v1)** — offline replay and run-log reconciliation tested; the live endpoint is first exercised in v1.1 |
+| radar scripts (`scan` / `score` / `selfcheck` / `regress` / `miss_diag`) | **scripts shipped (v1)** — offline replay and run-log reconciliation tested; the live endpoint is first exercised in v1.1. First live attempt 2026-10-27 never reached the endpoint: the local proxy answers `CONNECT export.arxiv.org:443` with `502`, measured in [`examples/radar-live-attempt-2026-10-27.md`](examples/radar-live-attempt-2026-10-27.md) |
 | case library, expanded | planned — generalizable kernels only, private specifics stripped |
 
 Two rows above set expectations, so read them before installing:
