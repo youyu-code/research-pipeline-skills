@@ -85,7 +85,7 @@ from pathlib import Path
 
 ATOM = "{http://www.w3.org/2005/Atom}"
 OS_NS = "{http://a9.com/-/spec/opensearch/1.1/}"
-BASE_URL = "http://export.arxiv.org/api/query"
+BASE_URL = "https://export.arxiv.org/api/query"
 USER_AGENT = "research-pipeline-skills/1.0 (+literature-radar)"
 
 # Generic public arXiv categories. A real profile replaces these with its own
@@ -258,6 +258,7 @@ def main(argv=None):
         floor = source.get("floor") or args.since
         status, http, payload, note = "failed", 0, b"", ""
         tries = 0
+        waited = 0
         url = build_url(args.base_url, source["query"], floor, until, max_results)
 
         if args.corpus:
@@ -268,8 +269,8 @@ def main(argv=None):
                 print("  FAIL  %-10s not in corpus: %s" % (name, origin))
                 records.append({"name": name, "status": "unreachable", "http": 0,
                                 "items": 0, "expected": None, "requests": 1,
-                                "floor": floor, "oldest-item": None, "bytes": 0,
-                                "file": None, "url": url,
+                                "waited": 0, "floor": floor, "oldest-item": None,
+                                "bytes": 0, "file": None, "url": url,
                                 "note": "corpus file missing"})
                 continue
             payload = origin.read_bytes()
@@ -281,6 +282,7 @@ def main(argv=None):
             if status == "limited":
                 print("  wait  %-10s 429; one retry after %ds (no staircase)" % (name, retry_wait))
                 time.sleep(retry_wait)
+                waited = retry_wait
                 status, http, payload, note = fetch(url, max_time)
                 requests_made += 1
                 tries = 2
@@ -308,7 +310,7 @@ def main(argv=None):
         oldest = deepest_date(entries) if entries else None
         records.append({
             "name": name, "status": status, "http": http, "items": items,
-            "expected": expected, "requests": tries,
+            "expected": expected, "requests": tries, "waited": waited,
             "floor": floor, "oldest-item": oldest, "bytes": len(payload),
             "file": target.name if target else None, "url": url, "note": note,
         })
