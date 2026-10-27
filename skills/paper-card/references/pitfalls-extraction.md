@@ -1,6 +1,6 @@
 # Extraction pitfalls — PDF to text, PDF to table
 
-Sixteen failure modes that all produce **plausible output**. None of them crashes, and most of them are invisible if you read the extracted text first and the health report never.
+Seventeen failure modes. The first sixteen all produce **plausible output**, none of them crashes, and most are invisible if you read the extracted text first and the health report never. The seventeenth is the opposite kind: it produces no output at all, and the only thing standing between you and a blank card is whether the report admits it.
 
 Instances here are described by shape, not by paper. The pattern is the transferable part; the paper it happened on is not.
 
@@ -13,7 +13,7 @@ Everything below is a variation on that sentence.
 ## How to use this file
 
 1. Run `scripts/pdf_text.py --mode layout`. Read `_health.json` **before** any page text.
-2. If `verdict` is not `ok`, switch mode. Do not read, summarise, or quote yet.
+2. If `verdict` is not `ok`, switch mode. Do not read, summarise, or quote yet. Exception: if it is `unreadable`, no mode will help — the file is damaged, so fetch it again.
 3. For a table, go to `scripts/table_coords.py` (upright) or `scripts/rotated_table.py` (rotated). Both exit non-zero rather than emit a silently broken grid.
 4. Log every switch in the card's extraction log. A reader downstream must be able to tell a text-layer number from an OCR-read one.
 
@@ -139,11 +139,23 @@ Everything below is a variation on that sentence.
 
 ---
 
+## F. The file itself
+
+### 17 — A truncated download is not an empty paper
+
+**Smell** A reader refuses the file (`Stream has ended unexpectedly`, `EOF marker not found`) or, worse, opens it and reports **zero pages** without raising — and a run that extracted nothing is scored `verdict: ok`, because zero suspect pages out of zero pages is a perfect ratio.
+**Do** Treat a zero-page read as a failed extraction, exactly like a page under ten characters: `pdf_text.py` now writes `verdict: unreadable` with the reader's own error and exits 3. Then re-fetch the file. PyMuPDF can repair some structural damage, so `--mode text` is still worth one try before declaring the file unusable.
+**Counter-example** *"The extractor returned no error, so the PDF is probably blank."* A 10.3 MB paper cut off at 8.4 MB had lost its cross-reference table; the tolerant reader returned a document with no pages and no exception. A blank card would have been written from it.
+**Where** `pdf_text.py` → `_health.json` `verdict: unreadable`, exit 3; the `errors` list carries the reader's message. Checksum the file against the source's stated size before blaming the extractor.
+
+---
+
 ## Which tool for which symptom
 
 | Symptom | Tool | Refusal signal |
 |---|---|---|
 | whole run, near-zero text per page | `pdf_text.py --mode text` | `_health.json` verdict ≠ `ok`, exit 3 |
+| reader refuses the file, or reports 0 pages | re-fetch; one `--mode text` try first | `_health.json` verdict `unreadable`, exit 3 |
 | `/one.onum`, `/uni2113` | `pdf_text.py --mode text`, then render | `/uni` or `.onum` still present |
 | upright table, columns misaligned | `table_coords.py` | exit 4 (inconsistent / under-split / over-split) |
 | rotated table | `rotated_table.py` | exit 3 (no rotated lines) |

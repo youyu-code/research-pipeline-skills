@@ -214,6 +214,28 @@ def check_pdf(rep, paths, tmp, why_skip):
     ok = code == 0 and "rows=5" in text and "cols=3" in text
     rep.expect("table_coords p.2", ok, "" if ok else "exit %d: %s" % (code, text.strip()[:200]))
 
+    # A file cut off mid-stream must be reported, not crashed on and not scored
+    # ok with zero pages (pitfalls-extraction.md B-17).
+    if has_module("pypdf") or has_module("pymupdf"):
+        raw = Path(pdf).read_bytes()
+        broken = Path(tmp) / "truncated.pdf"
+        broken.write_bytes(raw[: int(len(raw) * 0.6)])
+        out = Path(tmp) / "t_broken"
+        args = ["--pdf", str(broken), "--out", str(out)]
+        if not has_module("pypdf"):
+            args += ["--mode", "text"]
+        code, text = run(PC_SCRIPTS, "pdf_text.py", args)
+        health = out / "_health.json"
+        ok = code == 3 and health.is_file()
+        detail = "exit %d: %s" % (code, text.strip()[:160])
+        if ok:
+            data = json.loads(health.read_text(encoding="utf-8"))
+            ok = data.get("verdict") == "unreadable" and data.get("pages") == 0
+            detail = "verdict=%s pages=%s" % (data.get("verdict"), data.get("pages"))
+        rep.expect("pdf_text unreadable", ok, "" if ok else detail)
+    else:
+        rep.skip("pdf_text unreadable", "no PDF reader installed")
+
     out = Path(tmp) / "t4"
     code, text = run(PC_SCRIPTS, "rotated_table.py",
                      ["--pdf", pdf, "--page", "3", "--out", str(out)])
