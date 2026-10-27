@@ -85,7 +85,7 @@ python skills/paper-card/scripts/pdf_text.py \
 
 Expected: `pages=4 chars=559 verdict=partly-empty`, suspect page `[4]`. If you see that, extraction works. Character totals move a little between `pymupdf` releases — the verdict word and the suspect page are the real assertion, not the count. The full five-command paper-card self-test is in `skills/paper-card/assets/samples/README.md`.
 
-The radar chain runs the same way, against a five-entry synthetic Atom feed and with no network:
+The radar chain runs the same way, against a six-entry synthetic Atom feed and with no network:
 
 ```bash
 python skills/literature-radar/scripts/scan.py \
@@ -96,7 +96,7 @@ python skills/literature-radar/scripts/score.py \
   --scan-dir /tmp/radar --config skills/literature-radar/assets/samples/profile.json
 ```
 
-Expected: `items=5 expected=5` from the scan, then three graded entries (A, B, C) from the score, plus one entry killed by a negative term and one below the gate. `selfcheck.py`, `regress.py` and `miss_diag.py` continue the chain; `tests/t3_scripts_smoke.py` runs all five.
+Expected: `items=6 expected=6` from the scan, then `graded 4 (A=1 B=2 C=1) · negative 1 · below gate 1` from the score — one entry killed by a negative term and one below the gate, the other four carrying grades A, B and C. That last scan prints six entries because the corpus replay returns the whole file; one of them is dated 2026-01-07, outside `[2026-01-01, 2026-01-07)`, and it disappears the moment the scoring step is told where the window ends (`score.py … --until 2026-01-07` → `entries 5 · graded 3 (A=1 B=1 C=1)`). Both numbers are correct; the difference is the half-open rule doing its job. `selfcheck.py`, `regress.py` and `miss_diag.py` continue the chain; `tests/t3_scripts_smoke.py` runs all five.
 
 **3 — Create your state files before the first real run.** `research-ops/references/state-files.md` defines four of them — cursor, push log, register, TODO. A first run with nowhere to write its cursor will re-scan the same window on the second run. Write the read-only manifest in the same sitting: `research-ops/scripts/check-sources.py --manifest sources.sha256 --root <input-dir>` is what turns "I did not touch the corpus" into a record.
 
@@ -154,6 +154,8 @@ Three decisions that shape everything else:
 | `research-ops` | v1 — SKILL.md + 4 references + 1 script |
 | `paper-mill` | **planned** — ships as `proposal-forge/references/challenge-mode.md` until it has been run end to end on a real manuscript |
 | radar scripts (`scan` / `score` / `selfcheck` / `regress` / `miss_diag`) | **scripts shipped (v1)** — offline replay and run-log reconciliation tested; the live endpoint is first exercised in v1.1. First live attempt 2026-10-27 never reached the endpoint: the local proxy answers `CONNECT export.arxiv.org:443` with `502`, measured in [`examples/radar-live-attempt-2026-10-27.md`](examples/radar-live-attempt-2026-10-27.md) |
+| `table_coords.py` side-by-side guard | v1.1 — two tables printed on one page can be merged into a single grid that passes the cell-count guard; needs an x-split or a two-block detector. Measured instance in `examples/cards/ho2020_ddpm.md` p.5 |
+| a real independent-SI example | v1.1 — every shipped card is `si-state: inline`, so the `independent` branch is exercised only by the synthetic xlsx+docx fixture. Needs a paper whose SI is a separate file, from a source that hosts one |
 | case library, expanded | planned — generalizable kernels only, private specifics stripped |
 
 Two rows above set expectations, so read them before installing:

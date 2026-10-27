@@ -73,6 +73,8 @@ Everything below is a variation on that sentence.
 **Smell** Extracted rows jump between two unrelated value sets; row count is about the sum of two tables.
 **Do** Bring in a second source that preserves table structure, and require cell-by-cell agreement before any value lands.
 **Counter-example** Rebuilding one merged table out of two six-row tables. Every value is real, the table is fiction.
+**Where** `table_coords.py`. It exits 4 on an inconsistent, under-split or over-split grid — but a side-by-side merge **can pass that guard**, and when it does it says nothing at all: the two tables' row counts are compatible, so every row has the same cell count, and the merged grid is internally consistent. The only signal is the output, read against the page.
+**Measured instance** `examples/cards/ho2020_ddpm.md`, p.5: Tables 1 and 2 are printed side by side, the rebuild interleaved their rows and columns, and no warning was emitted. The card attributes those values to `text-layer` from the intact single-row lines and logs the rejected rebuild. If you are rebuilding a page with two table captions on it, split by x before trusting a single grid — or do not rebuild, and cite the text layer instead.
 
 ### 08 — Wide table collapsed into uneven spaces
 

@@ -109,7 +109,11 @@ Score each candidate (main, other) pair. Print the table. Do not skip the print 
 | 2–3 | **stop and ask the user.** Print both candidates, both first-page heads, and the score breakdown. Never resolve this yourself. |
 | < 2 | do not pair. Treat as separate papers. |
 
-**Forbidden:** assigning an SI to a body because it is "the only other PDF in the folder". That single heuristic is responsible for cross-paper contamination, and it is silent — every number still parses.
+**Cap: no declaration, no high confidence.** A pair whose first-page self-declaration is 0 cannot reach the ≥ 4 band, however the other three signals add up — stem similarity (2) + page-count asymmetry (1) + shared directory (1) already totals 4 with nothing on page 1 to support it. Treat such a row as 2–3 and stop.
+
+Measured instance: two unrelated papers saved as `li2024_graphdiff.pdf` (25 p) and `li2024_graphdiff_supp.pdf` (16 p) score **4** in one orientation (2 + 1 + 1, declaration 0) and **3** in the other (2 + 0 + 1, declaration 0). The orientation that reaches 4 is the one where the *unrelated* file is longer, which is exactly the shape a renamed dump takes. The score ranks candidates; it does not overrule an absence.
+
+**Forbidden:** assigning an SI to a body because it is "the only other PDF in the folder". That single heuristic is responsible for cross-paper contamination, and it is silent — every number still parses. **The score never outranks a missing declaration:** four points built from names and page counts, with no page-one evidence, is a naming coincidence, not a pair.
 
 ### 3.3 D-06 action sequence (manual path, end to end)
 
