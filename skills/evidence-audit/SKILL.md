@@ -50,7 +50,7 @@ When later evidence changes a claim's standing, the change has a **tier**, and t
 | **T3** | scope narrowing | holds inside a stated boundary, fails outside |
 | **T0** | not a reversal | restated, re-measured, or re-scoped without changing the claim |
 
-Count after defining, never before. A count of "reversals" produced before the tiers exist overstates by roughly a third in every corpus where it has been checked.
+Count after defining, never before. A count of "reversals" produced before the tiers exist overstates: in the one corpus where this has been checked, five of twelve findings moved out of the reversal column (12 → 7).
 
 → `references/reversal-tiers.md`
 

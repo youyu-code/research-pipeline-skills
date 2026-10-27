@@ -82,7 +82,7 @@ Four shapes, all commonly counted as reversals:
 3. **Report the breakdown, never the bare total.** "7 reversals" is not a number anyone can use. "3 T1, 2 T2, 2 T3" is.
 4. **The denominator is the population of claims examined**, not the population of reversals found.
 
-**The effect of getting this wrong:** in the corpus where these tiers were introduced, an existing count of reversals was reclassified. **Two of twelve** claims moved out of the reversal column, and the headline rate fell by roughly a sixth. Nothing about the evidence had changed — only the definition.
+**The effect of getting this wrong:** in the corpus where these tiers were introduced, an existing count of reversals was reclassified. **Five of twelve** claims moved out of the reversal column (12 → 7), and the headline rate fell by roughly forty percent. Nothing about the evidence had changed — only the definition.
 
 ## What a tier is not
 
@@ -117,7 +117,7 @@ The `basis` line is the discipline: every tier decision has a neighbouring tier 
 | T2 with no band | a collapse asserted by impression |
 | T3 for a uniformly weaker effect | that is T0; the domain did not shrink |
 | claim counted twice (abstract + body) | denominator inflated |
-| "8 reversals (67%)" with no breakdown | unusable, and hides that most are T3 |
+| "11 reversals" with no breakdown and no denominator | unusable, and hides that most are T3 |
 | T1 treated as a blocker | a tier converted into a stop |
 
 ## Checklist

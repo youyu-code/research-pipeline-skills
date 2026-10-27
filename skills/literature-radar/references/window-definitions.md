@@ -72,7 +72,7 @@ Which timestamp the window filters on: **submitted**, **published**, or **update
 - `published` — when the venue released it; can be much later.
 - `updated` — when it was last revised; **an old paper updated today enters today's window.**
 
-**Counter-example:** filtering on `updated` to catch revisions, then reporting the results as "new papers this week". Two thirds of the items were years old, and the report's headline count was wrong by that factor.
+**Counter-example:** filtering on `updated` to catch revisions, then reporting the results as "new papers this week". Most of the items were years old, and the report's headline count was wrong by that factor.
 
 If revisions are the goal, report them as revisions — a separate block, with the original submission date beside the revision date.
 

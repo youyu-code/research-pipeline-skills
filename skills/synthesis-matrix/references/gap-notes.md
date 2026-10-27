@@ -12,7 +12,7 @@ Six categories, each with its own test.
 | `claimed-never-shown` | a claim appears in discussions but no table supports it | the claim is quoted; the table it needs is named and absent |
 | `assumed-never-tested` | every paper in the group assumes Y | Y appears in ≥3 cards' methods; no card tests Y |
 | `measured-only-under-Z` | the number exists only for one regime | one condition populated, the neighbouring cell empty |
-| `disagreement-unresolved` | two cards report incompatible values, no third resolves it | a register entry, plus the experiment that would settle it |
+| `disagreement-unresolved` | two cards report incompatible values, no tie-breaker resolves it | a register entry, plus the experiment that would settle it |
 | `interface-missing` | two groups do not cite each other and their methods would compose | both groups populated, the cross-edge empty |
 
 ---
@@ -73,7 +73,7 @@ A gap in one topic is sometimes closed by a method in another. Record the edge, 
 | G-03 | topic-B §4 | a split protocol that would serve as the held-out set | not yet applied |
 ```
 
-Statuses: `not yet applied` / `applied` / `does not transfer`. The third one matters — recording that a cross-topic import failed prevents a second team from repeating it.
+Statuses: `not yet applied` / `applied` / `does not transfer`. The last one matters — recording that a cross-topic import failed prevents a second team from repeating it.
 
 ## Gap notes versus proposals
 

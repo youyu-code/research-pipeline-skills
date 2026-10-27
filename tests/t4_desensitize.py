@@ -6,8 +6,10 @@ repository, plus an optional fingerprint blacklist:
 
   1  Zotero credentials        API key, userID, `zotero://` deep-link URIs
   2  Zotero library names      a *named* library or collection in a config-like form
-  3  the author's account name the local user name (assembled at runtime, so this
-                               test cannot itself match; see `USER_TOKEN`)
+  3  the author's account name the local account name of the machine running the
+                               test, derived at runtime via `getpass`; this file
+                               never contains it. When no name can be derived the
+                               class is skipped and the skip is printed
   4  absolute paths            drive letters, /Users/, /home/<name>
   5  session identifiers       timestamped directory names, `_scanMMDD`-style runs
   F  fingerprints              values lifted from private source material; the
@@ -23,9 +25,16 @@ machine therefore checks all six classes; a clone checks the five that can be
 described without publishing anything.
 
 **The scanner proves it can see.** A guard that silently matches nothing looks
-exactly like a clean repository. So a canary line is assembled at runtime from
-parts, written to a temporary file, and the scanner is required to flag it before
-the real scan is trusted.
+exactly like a clean repository. So a canary block is assembled at runtime — the
+account name comes from the environment, never from this file — scanned in
+memory, and the scanner is required to flag every class before the real scan is
+trusted.
+
+**Class 3 depends on the machine, and says so.** The account name is read with
+`getpass.getuser()`, falling back to `USERNAME` / `USER` when that fails. On a
+machine where none of the three yields a name there is nothing to search for, so
+the class is skipped and the skip is printed. A class that quietly passes because
+its pattern is empty is the same failure the canary exists to prevent.
 
 A hit can be legitimate (documentation that quotes a path as an example). Mark
 the line with `desens:allow` and a reason; the marker is honoured, counted, and
@@ -37,10 +46,11 @@ Exit: 0 = pass, 1 = fail.
 """
 from __future__ import annotations
 
+import getpass
+import os
 import re
 import subprocess
 import sys
-import tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -48,33 +58,60 @@ HERE = Path(__file__).resolve().parent
 BLACKLIST = HERE / "fingerprints.local.txt"
 ALLOW_RE = re.compile(r"(?:#|<!--)\s*desens:allow\b")
 
-# Assembled so that this file does not contain the token it searches for.
-USER_TOKEN = "q" + "cz"
-
 SKIP_DIRS = {".git", ".workbuddy", ".codebuddy", "notes", "__pycache__", ".venv", "venv"}
 BINARY_SUFFIXES = {".pdf", ".xlsx", ".docx", ".png", ".jpg", ".jpeg", ".webp", ".zip", ".pyc"}
 
-PATTERNS = (
-    # (class, label, compiled regex)
-    ("1", "zotero api key",
-     re.compile(r"(?i)\b(?:zotero[_-]?)?api[_-]?key\b\s*[:=]\s*[\"']?[A-Za-z0-9]{16,}")),
-    ("1", "zotero user id",
-     re.compile(r"(?i)\buser(?:id|_id)\b\s*[:=]\s*[\"']?\d{5,}")),
-    ("1", "zotero select link",
-     re.compile(r"zotero://" r"select/\S+")),
-    ("2", "named zotero library",
-     re.compile(r"(?i)zotero\s+(?:library|collection)\s*[:=]\s*[^\s\"']{3,}")),
-    ("3", "account name",
-     re.compile(r"(?i)\b%s\b" % USER_TOKEN)),
-    ("4", "drive-letter path",
-     re.compile(r"\b[A-Za-z]:[\\/](?:Users|Documents|Desktop|WorkBuddy|data|research)\b")),
-    ("4", "posix home path",
-     re.compile(r"/(?:Users|home)/[A-Za-z][\w.-]+/")),
-    ("5", "timestamped directory",
-     re.compile(r"\b\d{4}-\d{2}-\d{2}[-_ ]\d{2}[-_:]\d{2}[-_:]\d{2}\b")),
-    ("5", "run directory",
-     re.compile(r"\b_(?:scan|ctl|probe|run|batch)\d{3,4}\b")),
-)
+
+def local_account_name():
+    """The account name of the machine running the test, derived at runtime.
+
+    `getpass.getuser()` first, then `USERNAME` / `USER`, and empty when none of
+    the three yields a name. The value is never written into this file: a test
+    that spells out the string it forbids is itself the leak, and it would also
+    only work on the machine it was written on.
+    """
+    try:
+        name = getpass.getuser()
+    except Exception:
+        name = ""
+    if not name:
+        name = os.environ.get("USERNAME") or os.environ.get("USER") or ""
+    return name.strip()
+
+
+USER_TOKEN = local_account_name()
+
+
+def build_patterns():
+    """The pattern table, built per run so class 3 exists only when it can."""
+    table = [
+        # (class, label, compiled regex)
+        ("1", "zotero api key",
+         re.compile(r"(?i)\b(?:zotero[_-]?)?api[_-]?key\b\s*[:=]\s*[\"']?[A-Za-z0-9]{16,}")),
+        ("1", "zotero user id",
+         re.compile(r"(?i)\buser(?:id|_id)\b\s*[:=]\s*[\"']?\d{5,}")),
+        ("1", "zotero select link",
+         re.compile(r"zotero://" r"select/\S+")),
+        ("2", "named zotero library",
+         re.compile(r"(?i)zotero\s+(?:library|collection)\s*[:=]\s*[^\s\"']{3,}")),
+    ]
+    if USER_TOKEN:
+        table.append(("3", "account name",
+                      re.compile(r"(?i)\b%s\b" % re.escape(USER_TOKEN))))
+    table.extend([
+        ("4", "drive-letter path",
+         re.compile(r"\b[A-Za-z]:[\\/](?:Users|Documents|Desktop|WorkBuddy|data|research)\b")),
+        ("4", "posix home path",
+         re.compile(r"/(?:Users|home)/[A-Za-z][\w.-]+/")),
+        ("5", "timestamped directory",
+         re.compile(r"\b\d{4}-\d{2}-\d{2}[-_ ]\d{2}[-_:]\d{2}[-_:]\d{2}\b")),
+        ("5", "run directory",
+         re.compile(r"\b_(?:scan|ctl|probe|run|batch)\d{3,4}\b")),
+    ])
+    return tuple(table)
+
+
+PATTERNS = build_patterns()
 
 
 def tracked_files():
@@ -155,10 +192,14 @@ def canary(blacklist):
         "/home/" + "somebody/papers/x.pdf",
         "scan dir " + "2025-01-02" + "-03-04-05",
         "batch _" + "scan0401",
-        "owner " + USER_TOKEN,
     ]
+    expected = {"1", "4", "5"}
+    if USER_TOKEN:
+        planted.append("owner " + USER_TOKEN)
+        expected.add("3")
+
     found = {cls for cls, _label, _no, _ex in scan_text("\n".join(planted), None)}
-    missing = {"1", "3", "4", "5"} - found
+    missing = expected - found
 
     # The F class is tested through an ad-hoc pattern rather than a real entry:
     # what matters is that a blacklist is consulted at all, and the real list is
@@ -185,7 +226,13 @@ def main():
               "below would be meaningless" % ",".join(sorted(missing)))
         print("T4  FAIL")
         return 1
-    print("  ok    scanner canary          planted leak detected in every class")
+    if USER_TOKEN:
+        print("  ok    scanner canary          planted leak detected in every class")
+    else:
+        print("  ok    scanner canary          planted leak detected in classes 1/4/5 "
+              "and the fingerprint probe; class 3 skipped")
+        print("  SKIP  account-name check      no local account name could be derived "
+              "(getpass empty, USERNAME/USER unset) — class 3 not scanned")
 
     files, how = tracked_files()
     print("  ok    input                    %d file(s) via %s" % (len(files), how))
@@ -212,7 +259,8 @@ def main():
         print("T4  FAIL  (%d hit(s) in %d file(s))" % (len(problems), len(files)))
         return 1
 
-    print("  ok    scan                     no hit in %d file(s)" % len(files))
+    print("  ok    scan                     no hit in %d file(s)%s"
+          % (len(files), "" if USER_TOKEN else " — class 3 was skipped"))
     print("T4  PASS")
     return 0
 

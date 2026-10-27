@@ -36,7 +36,7 @@ Any run that writes test output must write it somewhere the pipeline never reads
 
 **Rule:** probe files go to a dedicated subdirectory (`_probe/`), and parsing only ever reads the primary output directory. If the parser globs a parent directory, a probe becomes a source.
 
-**Counter-example:** a probe XML written into the main output directory was picked up as a sixth source. The report showed 1 extra item from a "source" that was a test fixture, and it took an hour to find because nothing about the item looked wrong — it was a real paper, fetched by a probe.
+**Counter-example:** a probe XML written into the main output directory was picked up as an additional source. The report showed 1 extra item from a "source" that was a test fixture, and it took an hour to find because nothing about the item looked wrong — it was a real paper, fetched by a probe.
 
 **Design rule:** the parser's input path should be a list of known files, not a wildcard over a directory. A wildcard is an invitation.
 

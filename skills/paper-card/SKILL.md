@@ -23,7 +23,7 @@ A card is a **terminal record of what one paper says and what can be cited from 
 
 **2 — Extract.** Run `scripts/pdf_text.py` in `layout` mode first. Read `_health.json` before reading text: a page under ten characters is not an empty page, it is a failed extraction. Switch mode, do not conclude. Tables go through `scripts/table_coords.py` (upright) or `scripts/rotated_table.py` (rotated); both refuse silently-broken output by exit code. → `references/pitfalls-extraction.md`
 
-**3 — Classify supplementary material.** Three states only, each with a date: *independent SI attached* / *inline in the body PDF* / *none as of YYYY-MM-DD*. The third state is a time-stamped observation, never a permanent fact. Then answer the second, separate question: does the material contain **the specific table** the claim needs? → `references/pitfalls-materials.md`
+**3 — Classify supplementary material.** Three states only, each with a date: *independent SI attached* / *inline in the body PDF* / *none as of YYYY-MM-DD*. That last state is a time-stamped observation, never a permanent fact. Then answer the second, separate question: does the material contain **the specific table** the claim needs? → `references/pitfalls-materials.md`
 
 **4 — Fill the card.** Follow `references/schema.md` v1 exactly — field names are a contract with `synthesis-matrix`. Every number carries its provenance and its citation form. A number you cannot cite goes in the to-be-filled section with the reason, not in the results section with a hedge. → `references/card-template.md`, `references/citation-rules.md`
 

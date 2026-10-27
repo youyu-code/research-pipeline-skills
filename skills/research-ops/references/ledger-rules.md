@@ -79,7 +79,7 @@ Rules:
 - The later pass **names what it is overturning** and why. "pass 1 is wrong" is not a review.
 - The final state of a document with three passes is three visible positions plus a current one. A reader can see the argument; that is the point.
 
-The failure this prevents: a review chain that looks unanimous because each pass quietly rewrote the last, and a claim that survived three rounds only because the third round never saw the first round's objection.
+The failure this prevents: a review chain that looks unanimous because each pass quietly rewrote the last, and a claim that survived three rounds only because the final round never saw the first round's objection.
 
 ## The boundary case: same-day adjudication
 
@@ -95,7 +95,7 @@ Three signals that the boundary has been crossed:
 | the neighbouring prose was adjusted to match the disposition | the evidence was edited, not the decision made |
 | a later entry cites `M07` as precedent for a different paper | a registration was used as a ruling |
 
-The third is the subtlest and the most damaging: it turns one paper's local resolution into a rule nobody voted for. **A registration is evidence about one document, not a precedent for another.**
+The last of the three is the subtlest and the most damaging: it turns one paper's local resolution into a rule nobody voted for. **A registration is evidence about one document, not a precedent for another.**
 
 ## Counter-examples
 

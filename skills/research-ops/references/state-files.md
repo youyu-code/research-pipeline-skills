@@ -115,7 +115,26 @@ Truncating to 16 hex characters is enough to catch an edit and short enough to r
 Two rules for the check:
 
 - **Verify before you read, not after.** A hash mismatch discovered after the analysis means the analysis has no known basis.
-- **A mismatch is B5-class, not a warning.** Something wrote to a read-only input; the run stops until you know what.
+- **A mismatch on a read-only input is B5-class, not a warning.** Something wrote to an input you do not own; the run stops until you know what.
+
+### Two classes of entry, two verdicts
+
+A manifest is only useful if it distinguishes what it is protecting. The same mismatch means opposite things depending on who is allowed to write the file, so every entry carries a class — `readonly` or `state` — and the class, not the mismatch, selects the response.
+
+| Class | What it holds | A mismatch means | Response |
+|---|---|---|---|
+| `readonly` | inputs you never write: a source corpus, a collaborator's directory, reference PDFs | something outside the pipeline wrote to an input | **B5 — stop.** Attribute before continuing; the analysis that already read the file has no known basis |
+| `state` | files the pipeline itself writes: cursor, push log, keyword profile, this manifest | the pipeline (or a person) advanced state between two checks | **attribute → re-baseline with a date and a reason → re-verify.** Not a stop |
+
+**`readonly`, applied correctly.** The check runs before the analysis, a source hash does not match, and the run stops with the file named. The attribution comes back "the upstream maintainer published a new revision" — a legitimate external change. The manifest is re-pinned to the new hash **with the date and that reason**, and the analysis is re-run from the new baseline. The run never continues on numbers computed against a file it no longer has.
+
+**`readonly`, applied wrongly.** The same mismatch is noticed after the analysis, re-pinned on the spot, and the report ships. Nothing in the record says what changed or when; six weeks later the re-pin is indistinguishable from a tampered input, and the report's numbers cannot be traced to any version of the corpus.
+
+**`state`, applied correctly.** The cursor's hash differs from the manifest. The check reports which file, which field moved, and the run that moved it (`run: 2026-01-07`, `covered-through` advanced one day). The entry is re-pinned with that date and reason, then the check is re-run and comes back clean. Two lines of attribution, and the manifest stays trustworthy.
+
+**`state`, applied wrongly.** Every state mismatch is re-pinned silently, because "it changes every run anyway". That is true until a truncated write or a hand edit lands — and it lands in the same bucket as routine advancement, so the one mismatch that mattered is now indistinguishable from the ones that did not. The mirror error is as bad: treating a cursor mismatch as B5 stops the pipeline every morning until people learn to skip the check.
+
+**Why one class is not enough.** A single-verdict manifest fails in one of two directions. If every mismatch stops the run, the first legitimate cursor advance trains the operator to override the check. If every mismatch is a warning, a write to a read-only input is logged and forgotten. The class is what keeps "stop" meaningful.
 
 ## Counter-examples, collected
 
@@ -131,6 +150,9 @@ Two rules for the check:
 | a fact restated in a second file | the two copies diverge, and neither is authoritative |
 | hash check run after the analysis | the analysis has no known basis |
 | hash mismatch logged as a warning | something wrote to a read-only input; that is a stop |
+| a `state` mismatch re-pinned with no date and no reason | the baseline becomes "whatever it was last time" |
+| every mismatch treated as a stop | the first routine cursor advance teaches people to override the check |
+| a `readonly` change re-pinned after the analysis | the report's numbers belong to no traceable version of the corpus |
 
 ## Checklist
 
@@ -139,3 +161,5 @@ Two rules for the check:
 - [ ] New register entries have an ID, a type, a location, and both facts quoted.
 - [ ] Open items each name a closer and carry a date.
 - [ ] Read-only manifest verified this run, and the result recorded in the delivery note.
+- [ ] Every manifest entry carries a class, and a mismatch was answered by its class rather than by habit.
+- [ ] Every re-pinned `state` entry carries a date and a one-clause reason.

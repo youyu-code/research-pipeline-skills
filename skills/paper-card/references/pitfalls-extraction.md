@@ -72,7 +72,7 @@ Everything below is a variation on that sentence.
 
 **Smell** Extracted rows jump between two unrelated value sets; row count is about the sum of two tables.
 **Do** Bring in a second source that preserves table structure, and require cell-by-cell agreement before any value lands.
-**Counter-example** Rebuilding one twelve-row table out of two six-row tables. Every value is real, the table is fiction.
+**Counter-example** Rebuilding one merged table out of two six-row tables. Every value is real, the table is fiction.
 
 ### 08 — Wide table collapsed into uneven spaces
 

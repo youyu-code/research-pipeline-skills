@@ -42,7 +42,7 @@ Every source, including the ones with zero items, gets a status. A source with n
 
 The floor — the oldest date any source has been walked back to — must be earlier than the window start. If it is not, the window was not covered, no matter how many items came back.
 
-**Counter-example:** a run whose busiest source returned 300 items all dated inside the window, while its slowest source had only ever been walked back to three days before the window end. The report was 300 items long and described a period it had read two-thirds of.
+**Counter-example:** a run whose busiest source returned 300 items all dated inside the window, while its slowest source had only ever been walked back to three days before the window end. The report was 300 items long and described a period it had read only in part.
 
 ---
 
