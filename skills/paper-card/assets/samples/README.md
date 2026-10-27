@@ -38,6 +38,8 @@ python ../../scripts/check_card.py demo2026_pipeline-selftest.md
 | `rotated_table` p.3 | `rotated=12 rows=4 cols=3`, identical cells to page 2 |
 | `check_card` | `PASS` with 9 values carrying provenance |
 
+Character totals in the two `pdf_text` rows track the `pymupdf` release that rendered this fixture; the `verdict` word and the suspect page are the stable part. `tests/t3_scripts_smoke.py` asserts only those, so a version bump does not turn the suite red for no reason.
+
 Four things this fixture is built to demonstrate:
 
 - **A blank page and a failed page look identical in aggregate.** Page 4 returns nothing from both extractors; that agreement is what makes "blank" a conclusion rather than a guess. See `pitfalls-extraction.md` §01.

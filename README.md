@@ -81,9 +81,43 @@ python skills/paper-card/scripts/pdf_text.py \
   --pdf skills/paper-card/assets/samples/synthetic_paper.pdf --out /tmp/t1
 ```
 
-Expected: `pages=4 chars=559 verdict=partly-empty`, suspect page `[4]`. If you see that, extraction works. The full five-command self-test is in `skills/paper-card/assets/samples/README.md`.
+Expected: `pages=4 chars=559 verdict=partly-empty`, suspect page `[4]`. If you see that, extraction works. Character totals move a little between `pymupdf` releases — the verdict word and the suspect page are the real assertion, not the count. The full five-command self-test is in `skills/paper-card/assets/samples/README.md`.
 
 **3 — Create your state files before the first real run.** `research-ops/references/state-files.md` defines four of them — cursor, push log, register, TODO. A first run with nowhere to write its cursor will re-scan the same window on the second run.
+
+### Cross-agent
+
+A skill is markdown plus, in one case, Python. Nothing here is tied to a vendor: any agent that can read a file and run a shell command can use the whole set.
+
+| Agent | Where the instructions go | Note |
+|---|---|---|
+| Claude Code | `~/.claude/skills/<name>/` (or `.claude/skills/` inside a project) | reads `SKILL.md` frontmatter natively |
+| Codex and other AGENTS.md readers | repository root | `AGENTS.md` holds the quality gates; `CLAUDE.md` is a one-line pointer to it so the two cannot diverge |
+| Anything else (a chat UI, a local script, a different CLI) | anywhere readable | point it at `skills/<name>/SKILL.md` and treat the body as instructions |
+
+Two mechanical requirements survive any translation: the folder name must equal `name:` in the frontmatter, and `paper-card/scripts/` must be reachable from a Python interpreter. There is no server, no build step, and no index to regenerate.
+
+## Verification
+
+One command, and it is the only release gate:
+
+```bash
+python tests/run_all.py
+```
+
+Expected last line: `ALL GREEN`. Five tests, all standard library:
+
+| Test | Asserts |
+|---|---|
+| `t1_frontmatter` | six `SKILL.md` files: `name` matches the folder and the character rules, `description` ≤ 1024 chars, and states trigger + input + output |
+| `t2_check_card` | the demo card passes with 9 provenance values; a card broken in three places fails with exactly 4 violations |
+| `t3_scripts_smoke` | every script answers `--help`; the five product scripts run against fixtures regenerated into a temp directory |
+| `t4_desensitize` | no credentials, account names, absolute paths, session IDs or private numeric fingerprints in any tracked file |
+| `t5_research_ops_negatives` | the three "does not trigger" prompts still route away from `research-ops` |
+
+`pypdf` and `pymupdf` are optional here: without them the PDF checks report `SKIP` instead of failing, and the summary counts the skips rather than hiding them.
+
+One skip you should expect on a fresh clone: `t4` also checks a numeric fingerprint blacklist, and **that list is deliberately not in the repository** — a file naming the values to forbid would publish them. It lives in `tests/fingerprints.local.txt`, which is gitignored; when it is absent, `t4` reports `SKIP` for that class and still checks the five that can be described without publishing anything.
 
 ## Design notes
 
@@ -107,11 +141,16 @@ Three decisions that shape everything else:
 | radar scripts (`scan` / `score` / `selfcheck` / `regress` / `miss_diag`) | planned |
 | case library, expanded | planned — generalizable kernels only, private specifics stripped |
 
+Two rows above set expectations, so read them before installing:
+
+- **`paper-mill` is not a folder.** The challenge rounds and the per-round quality gate live in `proposal-forge/references/challenge-mode.md`. It becomes a skill after it has been run end to end on a real manuscript — not before, because a quality gate that has never failed anything is a claim, not a gate.
+- **`literature-radar` ships without scripts.** The window definitions, rate-limit rules and self-check protocol are all there; the runner that applies them is not. Until it is, that skill is a specification you execute by hand, and `daily-literature-digest` remains the more complete tool for the same job.
+
 ## Credits and prior art
 
 This pipeline existed in a private form before this repository; the skills were extracted from working notes, not written to match an existing product.
 
-**No text, code, prompt, or schema from any third-party skill is reproduced here.** A licensing audit of the skills already installed in the author's environment found **no LICENSE file in any of them** — which means default copyright applies, and nothing could be reused even if it had been useful. The audit's only lasting effect is the compatibility notes below.
+**No text, code, prompt, or schema from any third-party skill is reproduced here.** Eleven skills already installed in the author's environment were audited. **None of them carries a LICENSE file** — two carry marketplace metadata with no license field and no repository link — so default copyright applies and nothing could be reused even where it overlapped. The audit produced no reuse and no removals: ten coexist with this repository because they solve the same job differently, and one (`zotero-cli`) is an ordinary tool rather than a competing skill. Names are the only thing carried over, and only so you can tell which is which.
 
 Skills you may already have installed that overlap with this repository, and how to choose:
 
