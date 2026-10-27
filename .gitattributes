@@ -1,0 +1,9 @@
+# Normalise line endings: LF in the index and in the working tree on every OS.
+# Skill files are read by agents and diffed by humans; a mixed CRLF/LF tree
+# produces whole-file diffs that hide the actual change.
+* text=auto eol=lf
+
+# Binary fixtures — never touched by the newline filter.
+*.pdf   binary
+*.xlsx  binary
+*.docx  binary
