@@ -131,6 +131,29 @@ def main():
                 print("  ok    broken card FAIL, %d violation(s): %s"
                       % (len(body), "; ".join(m[2] for m in MUTATIONS)))
 
+    # ---- shipped examples -------------------------------------------------
+    # The cards under examples/ are the only cards built from real papers, so
+    # they are the only place where the schema meets prose nobody wrote for it.
+    # A schema change that only the synthetic fixture survives is a schema the
+    # examples no longer document.
+    examples = sorted((ROOT / "examples" / "cards").glob("*.md"))
+    if not examples:
+        print("  FAIL  no example cards found under examples/cards/")
+        problems += 1
+    for path in examples:
+        code, out = run(path)
+        match = re.search(r"\((\d+) value\(s\) with provenance\)", out)
+        if code != 0:
+            print("  FAIL  example card rejected: %s (exit %d)" % (path.name, code))
+            for line in out.splitlines():
+                print("        " + line)
+            problems += 1
+        elif not match or int(match.group(1)) == 0:
+            print("  FAIL  example card passed with no provenance values: %s" % path.name)
+            problems += 1
+        else:
+            print("  ok    example card %-28s %s value(s)" % (path.name, match.group(1)))
+
     print("T2  %s" % ("FAIL" if problems else "PASS"))
     return 1 if problems else 0
 
