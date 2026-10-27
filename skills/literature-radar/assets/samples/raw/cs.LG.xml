@@ -4,10 +4,11 @@
   ids, authors, dates and abstracts are invented so the scripts can be exercised
   without a network and without touching real bibliographic data.
 
-  Shape matters, content does not. The five entries cover the gates the scorer
+  Shape matters, content does not. The six entries cover the gates the scorer
   can stop at: strong+keyword (graded), keyword-only (graded after two keyword
-  hits), anchor-only plus a negative term (killed), term-free (missed), and a
-  survey that matches one removable keyword (the regression fixture).
+  hits), anchor-only plus a negative term (killed), term-free (missed), a survey
+  that matches one removable keyword (the regression fixture), and one entry
+  published exactly on the window end date (the half-open boundary).
 -->
 <feed xmlns="http://www.w3.org/2005/Atom"
       xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/">
@@ -15,7 +16,7 @@
   <title>arXiv Query: search_query=cat:cs.LG</title>
   <id>http://arxiv.org/api/query</id>
   <updated>2026-01-06T00:00:00Z</updated>
-  <opensearch:totalResults>5</opensearch:totalResults>
+  <opensearch:totalResults>6</opensearch:totalResults>
   <opensearch:startIndex>0</opensearch:startIndex>
   <opensearch:itemsPerPage>200</opensearch:itemsPerPage>
 
@@ -72,6 +73,20 @@
     <summary>We benchmark evaluation protocols and compare two evaluation suites
     for widget assembly, reporting agreement between them.</summary>
     <author><name>E. Example</name></author>
+    <category term="cs.LG"/>
+  </entry>
+
+  <!-- The boundary case: published on the window end date. Inside a closed
+       window it would be graded; in the half-open [since, until) it belongs to
+       the next window and must be excluded. -->
+  <entry>
+    <id>http://arxiv.org/abs/2601.00006v1</id>
+    <updated>2026-01-07T09:00:00Z</updated>
+    <published>2026-01-07T09:00:00Z</published>
+    <title>A foundation model for widget alignment at the window boundary</title>
+    <summary>We train a foundation model for widget alignment and report it here
+    although it belongs to the window that opens on this date.</summary>
+    <author><name>F. Example</name></author>
     <category term="cs.LG"/>
   </entry>
 </feed>

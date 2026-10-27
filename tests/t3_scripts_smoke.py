@@ -41,6 +41,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import urllib.parse
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -266,6 +267,20 @@ def check_sources(rep, tmp):
     rep.expect("check-sources state", ok,
                "" if ok else "exit %d (want 2 + attribution): %s" % (code, flat(text)))
 
+    # A line that names no usable entry is its own stop reason. Reporting it as
+    # "a read-only input changed" would name a culprit that does not exist, so
+    # the banner is asserted both ways: the new one present, the old one absent.
+    bad_manifest = tmp / "broken.sha256"
+    bad_manifest.write_text("zzzz  a.txt\n", encoding="utf-8")
+    code, text = run(OPS_SCRIPTS, "check-sources.py",
+                     ["--manifest", str(bad_manifest), "--root", str(inputs)])
+    new_banner = "manifest malformed" in text
+    old_banner = "a read-only input changed" in text
+    ok = code == 1 and new_banner and not old_banner
+    rep.expect("check-sources malformed", ok,
+               "" if ok else "exit %d, malformed-banner=%s, changed-banner=%s: %s"
+               % (code, new_banner, old_banner, flat(text)))
+
 
 # ------------------------------------------------------------------ literature-radar
 
@@ -292,7 +307,7 @@ def check_radar(rep, tmp):
                      ["--corpus", str(corpus), "--out", str(scan_out),
                       "--since", WINDOW_SINCE, "--until", WINDOW_UNTIL,
                       "--source", "cs.LG"])
-    ok = (code == 0 and "items=5" in text and "expected=5" in text
+    ok = (code == 0 and "items=6" in text and "expected=6" in text
           and (scan_out / "cs.LG.xml").is_file() and (scan_out / "_scan.json").is_file())
     rep.expect("scan.py offline replay", ok,
                "" if ok else "exit %d: %s" % (code, text.strip()[:200]))
@@ -306,11 +321,26 @@ def check_radar(rep, tmp):
                    % (log.get("mode"), log.get("requests-made"),
                       log["sources"][0].get("floor")))
 
+        # Half-open window: the date clause sent to the API is inclusive on both
+        # ends, so an exclusive `until` must reach the wire as until-1 23:59.
+        url = urllib.parse.unquote(log["sources"][0].get("url", ""))
+        ok3 = "submittedDate:[202601010000 TO 202601062359]" in url
+        rep.expect("scan.py window clause", ok3,
+                   "" if ok3 else "url does not carry the half-open upper bound: %s" % url)
+
     code, text = run(RADAR_SCRIPTS, "score.py",
-                     ["--scan-dir", str(scan_out), "--config", str(profile)])
+                     ["--scan-dir", str(scan_out), "--config", str(profile),
+                      "--since", WINDOW_SINCE, "--until", WINDOW_UNTIL])
     ok = code == 0 and "graded 3" in text and "| A | 9 | 2601.00001" in text
     rep.expect("score.py profile", ok,
                "" if ok else "exit %d: %s" % (code, text.strip()[:240]))
+
+    # The boundary item is in the corpus and would be graded if admitted. It is
+    # published on the window end date, so the half-open window must drop it.
+    ok = "2601.00006" not in text
+    rep.expect("score.py half-open end", ok,
+               "" if ok else "an entry published on --until was admitted: %s"
+               % flat(text, 240))
 
     code, text = run(RADAR_SCRIPTS, "selfcheck.py",
                      ["--out", str(scan_out), "--expect-requests", "1"])

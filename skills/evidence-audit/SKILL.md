@@ -46,7 +46,7 @@ When later evidence changes a claim's standing, the change has a **tier**, and t
 | Tier | Name | Test |
 |---|---|---|
 | **T1** | rank flip | the ordering of two methods reverses |
-| **T2** | strength collapse | the direction holds, the effect goes to zero |
+| **T2** | strength collapse | the direction holds, the effect falls inside the noise band |
 | **T3** | scope narrowing | holds inside a stated boundary, fails outside |
 | **T0** | not a reversal | restated, re-measured, or re-scoped without changing the claim |
 

@@ -79,8 +79,9 @@ def main(argv=None):
     ap.add_argument("--config", default=None,
                     help="profile to diagnose against (default: <scan-dir>/../profile.json, "
                          "then the sample profile next to this script)")
-    ap.add_argument("--since", default=None, help="the run's window start (YYYY-MM-DD)")
-    ap.add_argument("--until", default=None, help="the run's window end (YYYY-MM-DD)")
+    ap.add_argument("--since", default=None, help="the run's window start, inclusive (YYYY-MM-DD)")
+    ap.add_argument("--until", default=None,
+                    help="the run's window end, exclusive (YYYY-MM-DD)")
     args = ap.parse_args(argv)
 
     item_id = args.item_id.strip()
@@ -102,8 +103,8 @@ def main(argv=None):
               % (entry["published"], args.since))
         print("  next    %s" % NEXT["out-of-window"])
         return 0
-    if args.until and entry["published"] > args.until:
-        print("  verdict out-of-window — published %s, after the window end %s"
+    if args.until and entry["published"] >= args.until:
+        print("  verdict out-of-window — published %s, on or after the window end %s"
               % (entry["published"], args.until))
         print("  next    %s" % NEXT["out-of-window"])
         return 0

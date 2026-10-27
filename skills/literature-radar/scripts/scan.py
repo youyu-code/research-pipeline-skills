@@ -15,6 +15,11 @@ end date is not, so two consecutive runs cannot both claim the boundary date.
 The end defaults to today (UTC) and is recorded in the log, because "now" means
 the query time, not the time the report was written.
 
+The API's date clause is **inclusive on both ends**, so the upper bound sent
+over the wire is `until - 1 day 23:59`. The exact URL is recorded per source in
+the run log: after the fact it is the only object that can tell a half-open
+window from a closed one, because both look identical in a report.
+
 **Each source carries a floor.** The floor is how far back that source was
 actually walked — `since` unless the source config sets its own. It is recorded
 per source, because a feed added yesterday cannot cover a window that starts last
@@ -75,7 +80,7 @@ import urllib.error
 import urllib.parse
 import urllib.request
 import xml.etree.ElementTree as ET
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 ATOM = "{http://www.w3.org/2005/Atom}"
@@ -102,14 +107,20 @@ def stamp(date_text, hhmm):
     return date_text.replace("-", "") + hhmm
 
 
-def build_url(base, query, since, until, max_results):
+def build_url(base, query, since, until_excl, max_results):
     """One constrained query: the category and the date clause, nothing else.
 
     Compound queries with OR groups do not reliably apply their remaining
     constraints, and the returned total then describes a different question.
+
+    The date clause is expressed in the API's inclusive day syntax, so the
+    half-open window `[since, until_excl)` becomes `[since 00:00, until_excl-1
+    23:59]`. Writing `until_excl 23:59` here — which this function did once —
+    asks for one extra day and quietly makes the window closed on the right.
     """
+    end = datetime.strptime(until_excl, "%Y-%m-%d").date() - timedelta(days=1)
     search = "%s AND submittedDate:[%s TO %s]" % (query, stamp(since, "0000"),
-                                                  stamp(until, "2359"))
+                                                  stamp(end.isoformat(), "2359"))
     params = urllib.parse.urlencode(
         {"search_query": search, "start": 0, "max_results": max_results,
          "sortBy": "submittedDate", "sortOrder": "ascending"},
@@ -210,6 +221,10 @@ def main(argv=None):
     init_wait = args.init_wait if args.init_wait is not None else int(request_cfg.get("init-wait", 0))
     retry_wait = args.retry_wait if args.retry_wait is not None else int(request_cfg.get("retry-wait", 60))
     until = args.until or utc_today()
+    if until <= args.since:
+        ap.error("--until (%s) must be after --since (%s): the window is half-open "
+                 "[since, until), so an empty window has no query to make"
+                 % (until, args.since))
 
     out = Path(args.out)
     if out.exists() and any(out.iterdir()) and not args.allow_nonempty:
@@ -254,7 +269,8 @@ def main(argv=None):
                 records.append({"name": name, "status": "unreachable", "http": 0,
                                 "items": 0, "expected": None, "requests": 1,
                                 "floor": floor, "oldest-item": None, "bytes": 0,
-                                "file": None, "note": "corpus file missing"})
+                                "file": None, "url": url,
+                                "note": "corpus file missing"})
                 continue
             payload = origin.read_bytes()
             status, http = "ok", 200
@@ -294,7 +310,7 @@ def main(argv=None):
             "name": name, "status": status, "http": http, "items": items,
             "expected": expected, "requests": tries,
             "floor": floor, "oldest-item": oldest, "bytes": len(payload),
-            "file": target.name if target else None, "note": note,
+            "file": target.name if target else None, "url": url, "note": note,
         })
         print("  %-5s %-10s http=%-3s items=%-4s expected=%-4s floor=%s oldest=%s%s"
               % ("ok" if status == "ok" else "FAIL", name, http or "000", items,

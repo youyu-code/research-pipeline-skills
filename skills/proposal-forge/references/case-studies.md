@@ -67,8 +67,8 @@ The full failure modes with their mechanics live in the skill that owns them; th
 ## 9 — Twelve reversals that were seven
 
 **Situation.** A review counted twelve claims as "reversed" by later evidence.
-**Wrong conclusion.** A 40% higher reversal rate than the field's, reported as a finding.
-**Test.** Define the tiers before counting: full flip, driven to zero, narrowed, not reversed at all. Recount.
+**Wrong conclusion.** A reversal rate well above the field's, reported as a finding — the gap was the definition, not the evidence.
+**Test.** Define the tiers before counting: full flip, falls inside the noise band, narrowed, not reversed at all. Recount.
 **Generalizes to.** Any count of a qualitative category. The count is a function of the definition, and the definition is usually written after the count.
 
 ## 10 — "Consistently outperforms", two of eight

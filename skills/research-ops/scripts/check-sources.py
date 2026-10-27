@@ -5,8 +5,14 @@
     check-sources.py --manifest state.sha256 --root . --class state
 
 Exit: 0 = every entry matches (clean)
-      1 = at least one `readonly` mismatch — this is the B5 stop
+      1 = at least one `readonly` mismatch, or a manifest line that cannot be
+          verified at all — in both cases this is the B5 stop
       2 = at least one `state` mismatch — attribute, re-pin, re-verify
+
+A malformed line is not a mismatch and must not be reported as one. Nothing was
+hashed, so the entry has no verdict; saying "a read-only input changed" would
+name a culprit that does not exist, and the entries that did match would read as
+partial coverage when they are no coverage.
 
 **Why this exists.** "I did not write to the read-only corpus" is a claim, and a
 claim with no carrier is indistinguishable from a memory. The manifest is the
@@ -180,7 +186,7 @@ def main(argv=None):
     entries, problems = parse_manifest(manifest.read_text(encoding="utf-8"),
                                        args.default_class)
 
-    readonly_fail, state_fail = [], []
+    readonly_fail, state_fail, malformed = [], [], []
     width = max([len(e.path) for e in entries] + [4])
     for entry in entries:
         status, detail = check(root, entry)
@@ -192,17 +198,30 @@ def main(argv=None):
 
     for cls, line_no, path, why in problems:
         print("  FAIL    %-*s  line %d: %s" % (width, path, line_no, why))
-        readonly_fail.append(Entry("-", path, READONLY, line_no))
+        malformed.append((line_no, path, why))
 
     total = len(entries) + len(problems)
-    bad = len(readonly_fail) + len(state_fail)
+    bad = len(readonly_fail) + len(state_fail) + len(malformed)
     print("")
-    print("  %d entr%s, %d mismatch%s" % (total, "y" if total == 1 else "ies",
-                                          bad, "" if bad == 1 else "es"))
+    print("  %d entr%s, %d problem%s" % (total, "y" if total == 1 else "ies",
+                                         bad, "" if bad == 1 else "s"))
 
     if not bad:
         print("exit 0 — every entry matches")
         return 0
+
+    if malformed:
+        # A malformed line is not a mismatch: nothing was hashed, so the entry has
+        # no verdict at all. Reporting it under "a read-only input changed" would
+        # name a culprit that does not exist, and the `ok` lines around it would
+        # read as partial coverage when they are no coverage.
+        print("")
+        print("[B5] manifest malformed — verification incomplete, treat as stop.")
+        print("     These lines name no usable entry, so no hash was compared for them.")
+        print("     Fix the manifest and re-run; the entries that did match do not make")
+        print("     the missing ones verified.")
+        for line_no, path, why in malformed:
+            print("       - line %d: %s" % (line_no, path))
 
     if readonly_fail:
         print("")
@@ -220,9 +239,10 @@ def main(argv=None):
         for entry in state_fail:
             print("       - %s" % entry.path)
 
+    code = 1 if (readonly_fail or malformed) else 2
     print("")
-    print("exit %d" % (1 if readonly_fail else 2))
-    return 1 if readonly_fail else 2
+    print("exit %d" % code)
+    return code
 
 
 if __name__ == "__main__":

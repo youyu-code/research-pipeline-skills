@@ -218,7 +218,10 @@ def analyse(scan_dir, cfg, since=None, until=None):
     for entry in load_corpus(scan_dir):
         if since and entry["published"] < since:
             continue
-        if until and entry["published"] > until:
+        if until and entry["published"] >= until:
+            # `until` is the window end, exclusive: an item published on that day
+            # belongs to the next window, and admitting it here is how the
+            # boundary gets delivered twice.
             continue
         rows.append(score_entry(entry, compiled))
     return rows
@@ -243,7 +246,8 @@ def main(argv=None):
     ap.add_argument("--config", required=True,
                     help="JSON config carrying the profile, weights and grades")
     ap.add_argument("--since", help="keep entries published on or after this date (YYYY-MM-DD)")
-    ap.add_argument("--until", help="keep entries published on or before this date (YYYY-MM-DD)")
+    ap.add_argument("--until", help="window end, exclusive: keep entries published strictly "
+                                    "before this date (YYYY-MM-DD)")
     ap.add_argument("--top", type=int, default=0,
                     help="show the top N by score (0 = all graded entries)")
     ap.add_argument("--out", help="write the full match record as JSON to this path")
