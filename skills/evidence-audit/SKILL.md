@@ -37,7 +37,7 @@ The order matters: a claim with no anchor cannot be audited at all, and a claim 
 - **A numeric anchor is not an anchor.** If the same table reports another number that would support a second reading, the claim is still a claim: only the paper's own sentence counts as the anchor. Otherwise every paper that reports a full table is automatically immune, and the `undecidable` category becomes structurally empty.
 - **"Not discussed" is not "not claimed".** An absence of discussion is not ambiguity. A factual statement that the paper can be seen to contradict is a defect, not an ambiguity, no matter how little the authors say about it.
 
-→ `references/counter-examples.md` for the eight rulings that look correct and are not.
+→ `references/counter-examples.md` for the ten rulings that look correct and are not.
 
 ## Reversal tiers
 
