@@ -21,7 +21,7 @@ A card is a **terminal record of what one paper says and what can be cited from 
 
 **1 — Pair.** Decide which PDF is the main text and which are supplementary, before opening anything. If the directory holds more than one PDF per paper, run the pairing heuristic and **print the pairing list**. Any pair below the confidence bar is a stop-and-ask, never a silent guess. → `references/zotero-manual.md`
 
-**2 — Extract.** Run `scripts/pdf_text.py` in `layout` mode first. Read `_health.json` before reading text: a page under ten characters is not an empty page, it is a failed extraction. Switch mode, do not conclude. Tables go through `scripts/table_coords.py` (upright) or `scripts/rotated_table.py` (rotated); both refuse silently-broken output by exit code. → `references/pitfalls-extraction.md`
+**2 — Extract.** Run `scripts/pdf_text.py` in `layout` mode first. Read `_health.json` before reading text: a page under ten characters is not an empty page, it is a failed extraction. Switch mode, do not conclude. One verdict is not a mode problem: `unreadable` means the file itself is damaged (a download cut off mid-stream is the usual cause), so re-fetch it instead of cycling modes. Tables go through `scripts/table_coords.py` (upright) or `scripts/rotated_table.py` (rotated); both refuse silently-broken output by exit code. → `references/pitfalls-extraction.md`
 
 **3 — Classify supplementary material.** Three states only, each with a date: *independent SI attached* / *inline in the body PDF* / *none as of YYYY-MM-DD*. That last state is a time-stamped observation, never a permanent fact. Then answer the second, separate question: does the material contain **the specific table** the claim needs? → `references/pitfalls-materials.md`
 
