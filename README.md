@@ -180,4 +180,4 @@ Skills you may already have installed that overlap with this repository, and how
 
 ## License
 
-Apache-2.0
+[Apache-2.0](LICENSE) · Copyright 2026 youyu-code
