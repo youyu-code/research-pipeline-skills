@@ -122,7 +122,11 @@ def tracked_files():
                               stderr=subprocess.DEVNULL)
         if proc.returncode == 0:
             names = proc.stdout.decode("utf-8", "replace").split("\0")
-            files = [ROOT / n for n in names if n]
+            # `git ls-files` reads the index, which can name a file deleted in
+            # the working tree but not yet staged. Scanning it would crash the
+            # test instead of reporting a result; git status is where that state
+            # belongs.
+            files = [ROOT / n for n in names if n and (ROOT / n).is_file()]
             if files:
                 return files, "git ls-files"
     except Exception:
