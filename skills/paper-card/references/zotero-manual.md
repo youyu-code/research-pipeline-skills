@@ -2,7 +2,7 @@
 
 > **Report your tier first.** Every card run starts with a three-line declaration:
 > `tier: 1|2|3 · implementation: <name@version> · capabilities-probed: <list>`
-> If any of those three cannot be filled from evidence, write `[BLOCKER-待用户]` and stop.
+> If any of those three cannot be filled from evidence, write `[BLOCKER-waiting-for-user]` and stop.
 > **Guessing an implementation name or a tool signature is worse than having no tier at all** — a wrong signature produces a plausible-looking empty result that reads like "the paper has no SI".
 
 ---

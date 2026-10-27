@@ -45,7 +45,7 @@ Six checks are usually run. Only three of them are failures on their own:
 
 **The discipline:** a coarse count is never read as a verdict. Check 4 is the one people act on, and acting on it alone is how a precision improvement gets reverted because the item count fell.
 
-**Counter-example:** a change removed 306 items from a ranking table. It was reverted as a regression. The 306 were duplicates the change had correctly de-duplicated; the revert restored them and the "regression" was the fix.
+**Counter-example:** a change removed 271 items from a ranking table. It was reverted as a regression. The 271 were duplicates the change had correctly de-duplicated; the revert restored them and the "regression" was the fix.
 
 ## Defaults are behaviour
 
@@ -59,7 +59,7 @@ When a new option is added to a config loader, **the default must reproduce the 
 
 **Why:** existing configs are not edited. A new default that changes behaviour means every existing config silently changes meaning, and the change will be discovered as a regression in data, not as an error in code.
 
-**Counter-example:** a new threshold defaulted to `0`, which meant "never drop". The old hard-coded behaviour dropped weak anchors at a non-zero value. Every config without the new key suddenly admitted 306 extra items, and the "regression" was diagnosed as data drift for two days before anyone read the loader.
+**Counter-example:** a new threshold defaulted to `0`, which meant "never drop". The old hard-coded behaviour dropped weak anchors at a non-zero value. Every config without the new key suddenly admitted 271 extra items, and the "regression" was diagnosed as data drift for two days before anyone read the loader.
 
 ## Word boundaries, on both sides
 

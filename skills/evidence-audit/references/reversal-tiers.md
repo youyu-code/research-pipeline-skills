@@ -21,7 +21,17 @@ Requirements, all three:
 
 1. the same metric family (a flip between AUPR and ROC-AUC is a metric change, not a reversal);
 2. both orderings measurable from reported values — not from a figure, not from an axis;
-3. the gap in the new ordering exceeds the noise band, or the flip is itself inside the band and therefore not established.
+3. the flip carries a **band annotation**: `band: in-band | outside-band | unestimated`.
+
+The band annotation is **mandatory and never decides the tier**. A flip that reversed is T1 whether or not its margin is measurable; what the annotation decides is the *citation form*:
+
+| `band` | May be cited as |
+|---|---|
+| `outside-band` | "the ordering reversed" — a settled reversal |
+| `in-band` | "the ordering reversed, within the noise band" — recorded, not relied on |
+| `unestimated` | "an ordering was reported to reverse; no band was available" — a claim about the reporting, not about the field |
+
+`in-band` is the state `synthesis-matrix` calls **within band**, and the two mean the same thing: the difference is smaller than the measurement's own disagreement. Neither file may drop the annotation and neither may upgrade it into a verdict.
 
 **Fails the test when:** the methods were never compared under the same condition, so no ordering existed to reverse.
 
@@ -35,10 +45,10 @@ This is the tier people skip, because it looks like "no change": A is still ahea
 
 | Before | After | Tier |
 |---|---|---|
-| +12 points, significant | +1.5 points, inside band | **T2** |
+| +12 points, significant | +1.5 points, **within band** | **T2** |
 | +12 points | +11 points, same band | T0 |
 
-**Requirements:** a band. Without one, a collapse cannot be distinguished from noise in either direction. If no band is available, the honest tier is T0 with a note — not T2 by impression.
+**Requirements:** a band. Without one, a collapse cannot be distinguished from noise in either direction. If no band is available the effect is `unestimated`: record T0 with the annotation, not T2 by impression. `within band` here is the same phrase and the same threshold as `synthesis-matrix` uses for a matrix cell — one number, one definition.
 
 ## T3 — scope narrowing
 
@@ -72,7 +82,7 @@ Four shapes, all commonly counted as reversals:
 3. **Report the breakdown, never the bare total.** "7 reversals" is not a number anyone can use. "3 T1, 2 T2, 2 T3" is.
 4. **The denominator is the population of claims examined**, not the population of reversals found.
 
-**The effect of getting this wrong:** in the corpus where these tiers were introduced, an existing count of reversals was reclassified. Roughly one claim in three moved out of the reversal column, and the headline rate fell by about 40%. Nothing about the evidence had changed — only the definition.
+**The effect of getting this wrong:** in the corpus where these tiers were introduced, an existing count of reversals was reclassified. **Two of twelve** claims moved out of the reversal column, and the headline rate fell by roughly a sixth. Nothing about the evidence had changed — only the definition.
 
 ## What a tier is not
 
@@ -90,7 +100,7 @@ claim:     "<the claim, quoted>"
 tier:      T1 | T2 | T3 | T0
 before:    <the earlier standing, with locator>
 after:     <the later standing, with locator>
-band:      <the noise band used, or "unestimated">
+band:      in-band | outside-band | unestimated   (mandatory for T1; decides citation form, not tier)
 boundary:  <for T3 only: the region where the claim fails>
 basis:     <why not the neighbouring tier>
 ```
@@ -103,6 +113,7 @@ The `basis` line is the discipline: every tier decision has a neighbouring tier 
 |---|---|
 | count of 12, no tiers defined | a count of a word |
 | T1 across metric families | a metric change, not an ordering flip |
+| T1 with no `band` field | the reversal is asserted without saying whether it is measurable |
 | T2 with no band | a collapse asserted by impression |
 | T3 for a uniformly weaker effect | that is T0; the domain did not shrink |
 | claim counted twice (abstract + body) | denominator inflated |
@@ -113,7 +124,7 @@ The `basis` line is the discipline: every tier decision has a neighbouring tier 
 
 - [ ] Tiers defined before counting.
 - [ ] Every reversal has before/after with locators.
-- [ ] T1 requires a comparable metric and both orderings measurable.
+- [ ] T1 requires a comparable metric, both orderings measurable, and a `band` annotation.
 - [ ] T2 requires a band; without one, T0 with a note.
 - [ ] T3 states the boundary where the claim fails.
 - [ ] Counted per claim; breakdown reported; denominator stated.

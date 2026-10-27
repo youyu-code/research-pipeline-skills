@@ -58,7 +58,7 @@ Answers: *which claims are in tension, under which ID, and who may close them.*
 ```markdown
 | id | type | location | facts | disposition | status |
 |---|---|---|---|---|---|
-| M01 | numeric | card-a §5 vs card-b §5 | 0.612 vs 0.607, same metric | cite body as primary, SI in parentheses | open |
+| M01 | numeric | card-a §5 vs card-b §5 | 0.74 vs 0.69, same metric | cite body as primary, SI in parentheses | open |
 ```
 
 | Field | Rule |

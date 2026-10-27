@@ -56,14 +56,16 @@ Count after defining, never before. A count of "reversals" produced before the t
 
 ## Attribution
 
-Every non-trivial ruling also says **what kind of problem it is**:
+Every non-trivial ruling also says **what kind of problem it is**. Four names, used verbatim:
 
-| | defect (the paper is wrong) | ambiguity (the paper is unclear) |
-|---|---|---|
-| **甲** | contradicts its own reported data | the sentence supports two readings |
-| **乙** | contradicts an external fact | a term is used with two meanings |
+| Name | Means |
+|---|---|
+| `defect-self-data` | the paper contradicts its own reported data |
+| `defect-external-fact` | the paper contradicts a checkable outside fact |
+| `ambiguity-two-readings` | one sentence supports two anchored readings |
+| `ambiguity-term-overload` | one term carries two meanings |
 
-A defect is checkable against the paper; an ambiguity is checkable only against a stated reading. Confusing them sends a defect to the authors as a wording question, and an ambiguity back as an error.
+The first word decides who fixes it: a defect needs new data or a correction, an ambiguity needs one sentence. Confusing them sends a defect to the authors as a wording question, and an ambiguity back as an error.
 
 → `references/attribution.md`
 
@@ -81,7 +83,7 @@ anchor:    "<the sentence that states it, with §>"
 verdict:   supported | unsupported | undecidable
 basis:     <the test that decided it, and its result>
 tier:      T1 | T2 | T3 | T0 | n/a
-attribution: defect-甲 | defect-乙 | ambiguity-甲 | ambiguity-乙 | n/a
+attribution: defect-self-data | defect-external-fact | ambiguity-two-readings | ambiguity-term-overload | n/a
 boundary:  <material read, and what was not>
 allowed:   "<the exact citation form this verdict permits>"
 ```

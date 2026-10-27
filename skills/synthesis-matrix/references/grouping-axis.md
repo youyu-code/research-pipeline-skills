@@ -28,14 +28,16 @@ Then derive **four predictions**. They are what makes the axis a hypothesis rath
 
 | Prediction | What it constrains |
 |---|---|
-| **P1 — what should cluster** | two papers that never cite each other should land in the same group for a stated reason |
-| **P2 — what should be empty** | at least one cell of the group × attribute grid should be empty, and you should be able to say why |
-| **P3 — which group is smallest** | a chain usually has one bottleneck and therefore one thin group |
-| **P4 — which groups share a baseline** | adjacent steps in a chain tend to be evaluated on the same benchmark; non-adjacent ones do not |
+| **AX1 — what should cluster** | two papers that never cite each other should land in the same group for a stated reason |
+| **AX2 — what should be empty** | at least one cell of the group × attribute grid should be empty, and you should be able to say why |
+| **AX3 — which group is smallest** | a chain usually has one bottleneck and therefore one thin group |
+| **AX4 — which groups share a baseline** | adjacent steps in a chain tend to be evaluated on the same benchmark; non-adjacent ones do not |
+
+They are numbered `AX1`–`AX4` because `P-1`–`P-4` already means repair order in a proposal, and `R1`–`R4` means a reporting commitment. An axis prediction is neither; sharing a prefix would invite the three scales to be read as one.
 
 Then the counter-example — and this is the step people skip:
 
-> **State one paper that fits a group's label but would contradict P2 or P4.** If no such paper could exist, the predictions are tautologies.
+> **State one paper that fits a group's label but would contradict AX2 or AX4.** If no such paper could exist, the predictions are tautologies.
 
 ## The counter-example check
 
@@ -69,11 +71,11 @@ When the axis changes, the matrix is rebuilt. Do not migrate cells: a cell's con
 axis: <one sentence, with direction>
 dimensions: [<primary>, <secondary if any>]
 predictions:
-  P1: <what clusters, and why>
-  P2: <which cell is empty, and why>
-  P3: <which group is thinnest, and why>
-  P4: <which groups share a baseline>
-falsifier: <a paper that would break P2 or P4>
+  AX1: <what clusters, and why>
+  AX2: <which cell is empty, and why>
+  AX3: <which group is thinnest, and why>
+  AX4: <which groups share a baseline>
+falsifier: <a paper that would break AX2 or AX4>
 built-from: <card ids + schema version>
 ```
 
@@ -93,7 +95,7 @@ A matrix without this header is a table. It may be a correct table; it cannot be
 ## Checklist
 
 - [ ] Axis written as one sentence with a direction.
-- [ ] Four predictions, each specific enough to be wrong.
+- [ ] Four predictions AX1–AX4, each specific enough to be wrong.
 - [ ] A named falsifier exists, and the axis survives it.
 - [ ] The swap test fails for at least one pair of groups.
 - [ ] At least one deliberately empty cell, with a reason.

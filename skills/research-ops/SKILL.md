@@ -46,6 +46,16 @@ And when the run defends a claim it also carries three lines of evidence — *wh
 
 → `references/delivery-format.md` for the ledger that backs the second triple, and the rule for what may not appear in either.
 
+## Disagreement is part of the delivery
+
+A run that only reports what it did is a run that cannot be argued with.
+
+1. Every delivery carries a final section that names what the executor disagrees with — the instruction as given, the pipeline itself, or the last ruling — with the reason, in the same place every time.
+2. **"None" is a valid answer and must be written out.** An absent section and a section saying "none" mean different things, and only one of them is trustworthy.
+3. This section is a third artefact, not a fourth delivery line: it is not folded into *files / next / new*, because a disagreement about the instruction is not a fact about the files.
+
+The failure this prevents: a pipeline where the only recorded objections are the ones that were already resolved, so every past decision looks unanimous in hindsight.
+
 ## Stopping
 
 Five conditions stop work; everything else continues and gets registered:

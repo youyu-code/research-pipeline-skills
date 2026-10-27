@@ -9,12 +9,16 @@ A verdict says whether a claim stands. Attribution says **why**, and the why det
 | **Checkable by** | comparing against a fact | comparing against a stated reading |
 | **Fails when** | the contradiction is not produced | the second reading is not produced |
 
-Four cells:
+Four names, each a single unbreakable token so that no shorthand can drift between files:
 
-| | 甲 | 乙 |
+| Name | Means | Checkable against |
 |---|---|---|
-| **defect** | contradicts its own reported data | contradicts an external fact |
-| **ambiguity** | the sentence supports two readings | a term carries two meanings |
+| `defect-self-data` | contradicts its own reported data | the paper's other statements |
+| `defect-external-fact` | contradicts an external fact | the cited fact or identity |
+| `ambiguity-two-readings` | one sentence supports two readings | two textual anchors |
+| `ambiguity-term-overload` | one term carries two meanings | both usages, quoted |
+
+The first word is the family (it decides who fixes it), the rest is the cell. Never abbreviate them back to a letter: a two-letter label is exactly the shorthand that gets misread across files.
 
 ---
 
@@ -22,11 +26,12 @@ Four cells:
 
 ```
 1. Is there a contradiction with something checkable?
-      yes, inside the paper   → defect-甲
-      yes, outside the paper  → defect-乙
+      yes, inside the paper   → defect-self-data
+      yes, outside the paper  → defect-external-fact
       no                      → step 2
 2. Are there two readings, each anchored in the paper's own text?
-      yes                     → ambiguity-甲 or -乙
+      yes                     → ambiguity-two-readings, or
+                                ambiguity-term-overload if the switch is in a term
       no                      → no verdict / undecidable
 ```
 
@@ -34,7 +39,7 @@ Four cells:
 
 **Why step 1 is cheap:** a defect needs one comparison. An ambiguity needs two quotations that genuinely diverge. If you cannot produce the two quotations, you were not looking at an ambiguity.
 
-## Defect-甲 — contradicts its own data
+## `defect-self-data` — contradicts its own data
 
 The most common and the most consequential. Forms:
 
@@ -47,17 +52,17 @@ The most common and the most consequential. Forms:
 
 **Requirement:** both sides quoted, with locators, in the same row.
 
-**Counter-example:** a claim of "state-of-the-art on all four benchmarks" audited as `unsupported` with no attribution. The table showed losses on two. The finding was `defect-甲`, and saying so is what made the correction possible — the fix was to the sentence, not to the experiment.
+**Counter-example:** a claim of "state-of-the-art on all four benchmarks" audited as `unsupported` with no attribution. The table showed losses on two. The finding was `defect-self-data`, and saying so is what made the correction possible — the fix was to the sentence, not to the experiment.
 
-## Defect-乙 — contradicts an external fact
+## `defect-external-fact` — contradicts an external fact
 
 The paper contradicts something true outside it: a physical constant, an arithmetic identity, a defined term used against its definition.
 
 **Requirement:** the external fact must be cited too, or it is opinion. "The reported sum does not equal the reported total" is checkable; "the effect size is implausibly large" is not, unless a bound is given.
 
-**Counter-example:** a table's percentages summed to 104%. Audited as "rounding", which is T0-ish and generous. The correct attribution was `defect-乙` — an arithmetic identity, violated, with no rounding convention that could explain four points.
+**Counter-example:** a table's percentages summed to 104%. Audited as "rounding", which is T0-ish and generous. The correct attribution was `defect-external-fact` — an arithmetic identity, violated, with no rounding convention that could explain four points.
 
-## Ambiguity-甲 — two readings of one sentence
+## `ambiguity-two-readings` — two readings of one sentence
 
 **Requirement:** two quotations, or one quotation that genuinely parses two ways, **plus** a statement of what changes under each reading.
 
@@ -70,7 +75,7 @@ The first is vagueness, which is a quality complaint and not an audit finding. T
 
 **Test:** if both readings lead to the same verdict, it is not an ambiguity worth ruling on. State that, and rule.
 
-## Ambiguity-乙 — a term with two meanings
+## `ambiguity-term-overload` — a term with two meanings
 
 The highest-value cell, and the rarest. A term used in two senses, where the switch is not flagged:
 
@@ -87,7 +92,7 @@ A ruling that cannot be re-derived is a ruling nobody can overturn, which is not
 ```markdown
 | claim | attribution | compared | where | would-flip-if |
 |---|---|---|---|---|
-| C-04 | defect-甲 | text "median" vs Table 2 header "mean" | §4 ¶2 vs Table 2 | the table's header were a footnote to a different column |
+| C-04 | defect-self-data | text "median" vs Table 2 header "mean" | §4 ¶2 vs Table 2 | the table's header were a footnote to a different column |
 ```
 
 | Field | Rule |
@@ -108,7 +113,7 @@ A ruling that cannot be re-derived is a ruling nobody can overturn, which is not
 | summary vs grid filed as ambiguity | it is a defect; the grid is unambiguous |
 | term switch not noticed because both usages are in the same section | the finding was skipped, not absent |
 | `would-flip-if` empty | opinion, not attribution |
-| defect-乙 with no citation for the external fact | opinion about plausibility |
+| defect-external-fact with no citation for the external fact | opinion about plausibility |
 
 ## Checklist
 

@@ -18,7 +18,7 @@ The asymmetry is deliberate: **registering is cheap and reversible; ruling is ex
 ```markdown
 | id | type | location | facts | disposition | status |
 |---|---|---|---|---|---|
-| M07 | numeric | card-a §5 Table 1 · card-b §4 | body 0.612 vs SI 0.607, same metric, same dataset | cite body as primary, SI parenthetical | open |
+| M07 | numeric | card-a §5 Table 1 · card-b §4 | body 0.74 vs SI 0.69, same metric, same dataset | cite body as primary, SI parenthetical | open |
 ```
 
 | Field | Test |
@@ -40,12 +40,14 @@ Two things a registration must never do:
 |---|---|---|
 | `definition` | do the two sides mean the same thing by this word | "accuracy" = per-cell vs per-molecule |
 | `wording` | same fact, two different sentences, one of them stronger | "outperforms" vs "comparable" |
-| `numeric` | same metric, different value | 0.612 vs 0.607 |
+| `numeric` | same metric, different value | 0.74 vs 0.69 |
 | `unsourced` | a claim with no locator anywhere | a percentage with no table |
 | `version` | the two statements describe different documents | preprint vs camera-ready |
 | `self-contradiction` | the paper contradicts itself internally | two denominators for one population |
 
 The tag is a filing decision, not a severity. A `numeric` entry can be trivial; a `wording` entry can invalidate a whole comparison.
+
+A conflict **between two papers** uses these same six tags — there is no seventh tag for cross-paper tension, and adding one would only postpone the question of which of the six it actually is. What differs is scope, and scope is already carried by `location`: two card paths in one field (`card-a §5 Table 1 · card-b §4`) say that the entry spans two documents, and a single path says it does not. The entry still registers both statements without deciding which paper is right; that decision belongs to the adjudication layer and binds only what it names.
 
 ## What a ruling must contain
 
@@ -64,17 +66,17 @@ scope: <the file this ruling binds — and nothing else>
 
 ## Multi-round review: append, never overwrite
 
-When a second review pass disagrees with the first, the first verdict stays on the page.
+When a second review pass disagrees with the first, the first verdict stays on the page. Rounds are named `pass 1`, `pass 2` — never `R1`, which already means a reporting commitment in a proposal.
 
 ```markdown
-**R1** holds — the claim survives because the SI reports the same value (…)
-**R2** fails — R1's basis is the SI, but the SI's table is a different ablation (…)
+**pass 1** holds — the claim survives because the SI reports the same value (…)
+**pass 2** fails — pass 1's basis is the SI, but the SI's table is a different ablation (…)
 ```
 
 Rules:
 
 - The later pass adds a paragraph; it does not edit the earlier one.
-- The later pass **names what it is overturning** and why. "R1 is wrong" is not a review.
+- The later pass **names what it is overturning** and why. "pass 1 is wrong" is not a review.
 - The final state of a document with three passes is three visible positions plus a current one. A reader can see the argument; that is the point.
 
 The failure this prevents: a review chain that looks unanimous because each pass quietly rewrote the last, and a claim that survived three rounds only because the third round never saw the first round's objection.
@@ -99,11 +101,11 @@ The third is the subtlest and the most damaging: it turns one paper's local reso
 
 | Written | Layer error |
 |---|---|
-| "M07: the correct PCC is 0.612" | a verdict in the record layer |
+| "M07: the correct PCC is 0.74" | a verdict in the record layer |
 | "M07: probably a typo, ignore" | a ruling disguised as a disposition |
 | "the card was reworded so the two values now agree" | evidence destroyed |
 | "per M07, all body values outrank SI values" | a registration used as precedent |
-| "R2 supersedes R1 (details omitted)" | a review that hides what it overturned |
+| "pass 2 supersedes pass 1 (details omitted)" | a review that hides what it overturned |
 | ruling without `scope` | binds everything, therefore nothing |
 
 ## Checklist

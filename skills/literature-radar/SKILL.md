@@ -1,7 +1,7 @@
 ---
 name: literature-radar
 description: >-
-  Periodic literature radar over arXiv or any OAI-PMH style scholarly API: runs a
+  Periodic literature radar over arXiv (Atom API) or similar scholarly feeds: runs a
   keyword-scored scan for a fixed time window, emits a per-day digest, and
   self-checks coverage before reporting. Use when the task is recurring new-paper
   tracking — probe the index ceiling, fetch per-category Atom feeds, score entries

@@ -79,7 +79,7 @@ The tempting move: the claim is ambiguous, but the same table reports a second n
 
 **The rule:** ambiguity requires **two readings anchored in the paper's own text**. A number can support a reading; only a sentence can establish that the authors meant it.
 
-**Counter-example:** a metric was reported as a mean in the table and described as a median in the text. The audit ruled "ambiguous, both readings available" because the table's dispersion column was consistent with either. The correct verdict was `defect-甲`: the text and the table contradict each other, and the paper's own numbers cannot be both.
+**Counter-example:** a metric was reported as a mean in the table and described as a median in the text. The audit ruled "ambiguous, both readings available" because the table's dispersion column was consistent with either. The correct verdict was `defect-self-data`: the text and the table contradict each other, and the paper's own numbers cannot be both.
 
 ### "Not discussed" is not "not claimed"
 
@@ -89,7 +89,7 @@ The claim "the method generalises to unseen scaffolds" was stated in §5 and nev
 
 **The rule:** ambiguity requires **two readings that are both textually anchored**. Absence of discussion is not a second reading — it is an absence.
 
-**Counter-example, in the other direction:** a term used in two clearly different senses in §2 and §5 (`accuracy` as per-cell in one, per-molecule in the other) — that is genuine ambiguity-乙, because both readings have a sentence.
+**Counter-example, in the other direction:** a term used in two clearly different senses in §2 and §5 (`accuracy` as per-cell in one, per-molecule in the other) — that is genuine ambiguity-term-overload, because both readings have a sentence.
 
 ---
 

@@ -25,7 +25,7 @@ The output is not "a table of results". It is a claim about how a field is organ
 Before building the table, write:
 
 1. the axis, in one sentence;
-2. **four predictions** the axis makes — what should cluster, what should be empty, which group should be smallest, which two groups should share a baseline;
+2. **four predictions AX1–AX4** the axis makes — what should cluster, what should be empty, which group should be smallest, which two groups should share a baseline;
 3. a **counter-example** that would falsify the axis: a paper that fits the label but contradicts the predicted structure.
 
 If you cannot state (3), the axis is a description, not a hypothesis, and the matrix will encode your taste.

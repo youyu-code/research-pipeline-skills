@@ -11,7 +11,7 @@ Read this before signing a verdict. Every item below has passed an internal revi
 **Looks right.** The paper states a general claim and says nothing about the boundary case. The authors did not discuss it, so the material cannot settle it.
 **Why wrong.** Silence is not a second reading. If the paper's own data shows the claim failing in that case, the claim is contradicted — a defect, not an ambiguity.
 **The tell.** Your justification contains "they do not say whether".
-**Correct.** Test 2: search the paper's own numbers. If they refute, `unsupported` + `defect-甲`.
+**Correct.** Test 2: search the paper's own numbers. If they refute, `unsupported` + `defect-self-data`.
 
 ## 2 — `supported` because the number is in the paper
 
@@ -25,7 +25,7 @@ Read this before signing a verdict. Every item below has passed an internal revi
 **Looks right.** The sentence could mean X. The table also contains a value consistent with X. Two readings are available.
 **Why wrong.** That is a numeric anchor. Only a sentence can establish that the authors meant a reading; otherwise every well-reported paper becomes immune to the ambiguity test.
 **The tell.** Your second reading is supported by a table cell, not a quotation.
-**Correct.** Ambiguity needs two textual anchors. One text plus one number is a defect-甲 candidate, or nothing.
+**Correct.** Ambiguity needs two textual anchors. One text plus one number is a defect-self-data candidate, or nothing.
 
 ## 4 — `unsupported` because the number could not be found
 
@@ -55,12 +55,12 @@ Read this before signing a verdict. Every item below has passed an internal revi
 **The tell.** Your two readings come from two textbooks, not two sentences.
 **Correct.** No ambiguity finding. Optionally note the convention the paper follows — that is a card-level terminology note, not an audit verdict.
 
-## 8 — T1, where the strength collapsed
+## 8 — T1 asserted with no band field
 
-**Looks right.** A later result shows a different method ahead. The ordering reversed.
-**Why wrong.** If the new gap is inside the noise band, no ordering is established and nothing reversed — that is T2 at most, and T0 if no band exists.
-**The tell.** The before and after gaps differ by an order of magnitude.
-**Correct.** Compute both gaps against the band. Ranking inside the band → not established; effect collapsed → T2.
+**Looks right.** A later result puts a different method ahead. The ordering reversed, so the claim goes in the count as a rank flip.
+**Why wrong.** The tier is not the question here — the *citation* is. Without a `band` annotation the reader cannot tell a settled reversal from one whose margin is smaller than the measurement's own disagreement, and both get quoted with the same confidence. The reversal is real; the warrant for relying on it is missing.
+**The tell.** Your row has `tier: T1` and nothing on the `band` line.
+**Correct.** Keep the tier, fill the annotation: `outside-band` (citable as settled), `in-band` (recorded, not relied on), or `unestimated` (a claim about the reporting, not the field). A missing band does not demote T1 to T2 — a strength collapse is a different event, and conflating the two inflates one while hiding the other.
 
 ## 9 — A conservative mismatch filed as an overclaim
 

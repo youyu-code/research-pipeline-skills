@@ -83,7 +83,7 @@ Three conversions that are always wrong:
 
 | Wrong | Why it breaks |
 |---|---|
-| "it is an M-数值 entry, so it is B3" | B3 requires a contradiction between your records about *what happened*, not between two papers about *what they found* |
+| "it is an M-numeric entry, so it is B3" | B3 requires a contradiction between your records about *what happened*, not between two papers about *what they found* |
 | "it is P-1, so we stop everything" | P-1 orders a repair; the pipeline can keep producing elsewhere while P-1 waits |
 | "it is only cosmetic, so it cannot be B5" | a cosmetic-looking defect that propagates silently is exactly B5 |
 
