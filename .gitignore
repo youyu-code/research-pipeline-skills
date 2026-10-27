@@ -6,6 +6,10 @@
 # working notes — contain private paths and Zotero keys (M1 inventory lives here)
 notes/
 
+# private fingerprint blacklist — a list of the values to forbid would publish
+# them; tests/t4_desensitize.py reads it locally and reports SKIP when absent
+tests/fingerprints.local.txt
+
 # python
 __pycache__/
 *.py[cod]
