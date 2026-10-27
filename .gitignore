@@ -1,0 +1,19 @@
+# agent / tooling state — never publish
+.workbuddy/
+.codebuddy/
+.claude/settings.local.json
+
+# working notes — contain private paths and Zotero keys (M1 inventory lives here)
+notes/
+
+# python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# os / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
