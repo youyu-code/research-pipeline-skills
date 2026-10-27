@@ -36,6 +36,18 @@ The second half is the hard half. A sweep that returns nothing looks identical t
 → `references/tuning.md` for changing the profile without breaking the corpus it was tuned on.
 → `references/pipeline-ops.md` for long runs, request batching, probe isolation, and the copied-script trap.
 
+### Scripts
+
+Five, standard library only. `scan.py` fetches one window, `score.py` applies the profile, `selfcheck.py` runs the four checks above, `regress.py` runs the six tuning checks, `miss_diag.py` explains one absence. Each one is a step of the run table, not a replacement for it: the report, the push-log delta and the cursor are still written by whoever is running the day.
+
+```bash
+python scripts/scan.py --out _out/2026-01-07 --since 2026-01-01
+python scripts/score.py --scan-dir _out/2026-01-07 --config profile.json
+python scripts/selfcheck.py --out _out/2026-01-07 --expect-requests 4
+```
+
+`scan.py --corpus <dir>` replays Atom files already on disk with no network — the path the tests use, and the one to reach for before blaming the profile for an empty window.
+
 ## Hard rules
 
 - **A zero-result report must carry its own proof.** "Nothing was published" requires three things: the newest item's date is older than the window start; the shallowest source was walked back past the start; a control query returns items. Without all three, write "the window was not covered", not "nothing was published". Counter-example: a zero reported because a request died at the transport layer; the control query would have shown the source was reachable the whole time.
@@ -58,6 +70,7 @@ A run delivers, in this order:
 | Task | Go to |
 |---|---|
 | define what "this window" means | `references/window-definitions.md` |
+| fetch, score, check, regress or diagnose one run | `scripts/` (5 files) |
 | the run is being rate-limited or returns nothing | `references/rate-limits.md` |
 | is this run trustworthy | `references/checking.md` |
 | change the keyword profile | `references/tuning.md` |

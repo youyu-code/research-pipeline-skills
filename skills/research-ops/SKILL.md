@@ -100,6 +100,7 @@ The last one matters most: research-ops is not a note-taking skill, and a pipeli
 | Task | Go to |
 |---|---|
 | which file holds which fact; how to update a cursor | `references/state-files.md` |
+| verify a manifest before and after a run | `scripts/check-sources.py --manifest <file> --root <dir> [--class readonly\|state]` |
 | how to close a run; what the ledger must contain | `references/delivery-format.md` |
 | should I stop; is this a blocker | `references/blocker-levels.md` |
 | may I decide this, or only register it | `references/ledger-rules.md` |

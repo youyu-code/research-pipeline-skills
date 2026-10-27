@@ -1,0 +1,29 @@
+{
+  "_comment": "The same profile with one keyword removed ('survey'). Used by regress.py as --config-new against profile.json, to show check 1 firing: an item that was pushed under the old profile disappears under the new one.",
+  "version": 1,
+  "sources": [
+    { "name": "cs.LG", "query": "cat:cs.LG" }
+  ],
+  "request": {
+    "max-results": 200,
+    "max-time": 500,
+    "init-wait": 0,
+    "retry-wait": 60
+  },
+  "profile": {
+    "strong": ["foundation model"],
+    "keyword": ["benchmark", "evaluation"],
+    "anchor": ["widget alignment"],
+    "weak": ["dataset", "training"],
+    "negative": ["retraction", "withdrawn"]
+  },
+  "weights": {
+    "strong": 3,
+    "keyword": 2,
+    "anchor": 2,
+    "weak": 1,
+    "negative": -3
+  },
+  "grades": { "A": 7, "B": 5, "C": 3 },
+  "c-grade": "anchor-or-two-keywords"
+}

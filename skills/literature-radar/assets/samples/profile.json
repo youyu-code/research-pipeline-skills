@@ -1,0 +1,29 @@
+{
+  "_comment": "Example config for scan.py and score.py. One file, two sections: `sources` and `request` drive the fetch, `profile` / `weights` / `grades` drive the scoring. Copy it, replace the profile with your own terms, and pass it with --config. The category cs.LG is a public arXiv category, not a topic recommendation.",
+  "version": 1,
+  "sources": [
+    { "name": "cs.LG", "query": "cat:cs.LG" }
+  ],
+  "request": {
+    "max-results": 200,
+    "max-time": 500,
+    "init-wait": 0,
+    "retry-wait": 60
+  },
+  "profile": {
+    "strong": ["foundation model"],
+    "keyword": ["benchmark", "evaluation", "survey"],
+    "anchor": ["widget alignment"],
+    "weak": ["dataset", "training"],
+    "negative": ["retraction", "withdrawn"]
+  },
+  "weights": {
+    "strong": 3,
+    "keyword": 2,
+    "anchor": 2,
+    "weak": 1,
+    "negative": -3
+  },
+  "grades": { "A": 7, "B": 5, "C": 3 },
+  "c-grade": "anchor-or-two-keywords"
+}

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Synthetic Atom feed for the offline path. Nothing here is a real paper: the
+  ids, authors, dates and abstracts are invented so the scripts can be exercised
+  without a network and without touching real bibliographic data.
+
+  Shape matters, content does not. The five entries cover the gates the scorer
+  can stop at: strong+keyword (graded), keyword-only (graded after two keyword
+  hits), anchor-only plus a negative term (killed), term-free (missed), and a
+  survey that matches one removable keyword (the regression fixture).
+-->
+<feed xmlns="http://www.w3.org/2005/Atom"
+      xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/">
+  <link href="http://arxiv.org/api/query?search_query=cat:cs.LG" rel="self" type="application/atom+xml"/>
+  <title>arXiv Query: search_query=cat:cs.LG</title>
+  <id>http://arxiv.org/api/query</id>
+  <updated>2026-01-06T00:00:00Z</updated>
+  <opensearch:totalResults>5</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <opensearch:itemsPerPage>200</opensearch:itemsPerPage>
+
+  <entry>
+    <id>http://arxiv.org/abs/2601.00001v1</id>
+    <updated>2026-01-02T09:00:00Z</updated>
+    <published>2026-01-02T09:00:00Z</published>
+    <title>Widget alignment under distribution shift</title>
+    <summary>We introduce a benchmark for widget alignment and show that a
+    foundation model trained on synthetic widgets generalizes to held-out
+    factories. The dataset and the training recipe are released.</summary>
+    <author><name>A. Example</name></author>
+    <category term="cs.LG"/>
+  </entry>
+
+  <entry>
+    <id>http://arxiv.org/abs/2601.00002v1</id>
+    <updated>2026-01-03T09:00:00Z</updated>
+    <published>2026-01-03T09:00:00Z</published>
+    <title>A survey of widget assembly</title>
+    <summary>This survey compares the evaluation conventions used across labs and
+    reviews the dataset each lab reports on.</summary>
+    <author><name>B. Example</name></author>
+    <category term="cs.LG"/>
+  </entry>
+
+  <entry>
+    <id>http://arxiv.org/abs/2601.00003v1</id>
+    <updated>2026-01-04T09:00:00Z</updated>
+    <published>2026-01-04T09:00:00Z</published>
+    <title>Retraction: widget alignment revisited</title>
+    <summary>The authors retract the earlier claim that widget alignment
+    transfers across factory layouts.</summary>
+    <author><name>C. Example</name></author>
+    <category term="cs.LG"/>
+  </entry>
+
+  <entry>
+    <id>http://arxiv.org/abs/2601.00004v1</id>
+    <updated>2026-01-05T09:00:00Z</updated>
+    <published>2026-01-05T09:00:00Z</published>
+    <title>Notes on factory throughput</title>
+    <summary>A short note on queueing effects in factory throughput measurement,
+    with no experiments.</summary>
+    <author><name>D. Example</name></author>
+    <category term="cs.LG"/>
+  </entry>
+
+  <entry>
+    <id>http://arxiv.org/abs/2601.00005v1</id>
+    <updated>2026-01-06T09:00:00Z</updated>
+    <published>2026-01-06T09:00:00Z</published>
+    <title>Benchmarking evaluation protocols for widget assembly</title>
+    <summary>We benchmark evaluation protocols and compare two evaluation suites
+    for widget assembly, reporting agreement between them.</summary>
+    <author><name>E. Example</name></author>
+    <category term="cs.LG"/>
+  </entry>
+</feed>
