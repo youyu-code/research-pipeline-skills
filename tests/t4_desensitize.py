@@ -4,7 +4,7 @@
 Scans every tracked file for the five classes that must never reach a public
 repository, plus an optional fingerprint blacklist:
 
-  1  Zotero credentials        API key, userID, `zotero://select/...` deep links
+  1  Zotero credentials        API key, userID, `zotero://` deep-link URIs
   2  Zotero library names      a *named* library or collection in a config-like form
   3  the author's account name the local user name (assembled at runtime, so this
                                test cannot itself match; see `USER_TOKEN`)
@@ -46,7 +46,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 HERE = Path(__file__).resolve().parent
 BLACKLIST = HERE / "fingerprints.local.txt"
-ALLOW_MARKER = "desens:allow"
+ALLOW_RE = re.compile(r"(?:#|<!--)\s*desens:allow\b")
 
 # Assembled so that this file does not contain the token it searches for.
 USER_TOKEN = "q" + "cz"
@@ -61,7 +61,7 @@ PATTERNS = (
     ("1", "zotero user id",
      re.compile(r"(?i)\buser(?:id|_id)\b\s*[:=]\s*[\"']?\d{5,}")),
     ("1", "zotero select link",
-     re.compile(r"zotero://select/\S+")),
+     re.compile(r"zotero://" r"select/\S+")),
     ("2", "named zotero library",
      re.compile(r"(?i)zotero\s+(?:library|collection)\s*[:=]\s*[^\s\"']{3,}")),
     ("3", "account name",
@@ -118,7 +118,7 @@ def scan_text(text, blacklist):
     """Return [(class, label, line_no, excerpt)] for one file's text."""
     hits = []
     for line_no, line in enumerate(text.splitlines(), 1):
-        if ALLOW_MARKER in line:
+        if ALLOW_RE.search(line):
             hits.append(("*", "allowed", line_no, line.strip()[:100]))
             continue
         for cls, label, rx in PATTERNS:
@@ -153,7 +153,7 @@ def canary(blacklist):
         "userID: " + "9" * 8,
         "C:" + "\\Users\\somebody\\paper.pdf",
         "/home/" + "somebody/papers/x.pdf",
-        "scan dir " + "2026-01-02-03-04-05",
+        "scan dir " + "2025-01-02" + "-03-04-05",
         "batch _" + "scan0401",
         "owner " + USER_TOKEN,
     ]
@@ -203,8 +203,8 @@ def main():
                 problems.append((cls, rel, line_no, label, excerpt))
 
     if allowed:
-        print("  note  %d line(s) marked %s: %s"
-              % (len(allowed), ALLOW_MARKER, ", ".join(allowed[:6])))
+        print("  note  %d line(s) carry the allow marker: %s"
+              % (len(allowed), ", ".join(allowed[:6])))
 
     if problems:
         for cls, rel, line_no, label, excerpt in problems:
