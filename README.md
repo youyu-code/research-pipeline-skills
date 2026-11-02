@@ -129,7 +129,8 @@ Expected last line: `ALL GREEN`. Five tests, all standard library:
 | `t1_frontmatter` | six `SKILL.md` files: `name` matches the folder and the character rules, `description` ≤ 1024 chars, and states trigger + input + output |
 | `t2_check_card` | the demo card passes with 9 provenance values; a card broken in three places fails with exactly 4 violations |
 | `t3_scripts_smoke` | eleven product scripts answer `--help`; the paper-card five run on regenerated fixtures, the radar five on an offline Atom feed, `check-sources` on a two-class hash fixture |
-| `t4_desensitize` | no credentials, account names, absolute paths, session IDs or private numeric fingerprints in any tracked file |
+| `t4a_desensitize_tree` | no credentials, account names, absolute paths, session IDs or private numeric fingerprints in any tracked file |
+| `t4b_desensitize_history` | no such value in any line ever **added** in the repository's history — a value deleted later is still published by `git log -p`. Scans unique commits only, and fails rather than passing when the scan yields nothing |
 | `t5_research_ops_negatives` | the three "does not trigger" prompts still route away from `research-ops` |
 
 `pypdf` and `pymupdf` are optional here: without them the PDF checks report `SKIP` instead of failing, and the summary counts the skips rather than hiding them.
