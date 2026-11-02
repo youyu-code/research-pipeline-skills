@@ -72,11 +72,13 @@ python -m pip install "pypdf>=3.9" "pymupdf>=1.23"
 
 ### Cold start, three steps
 
-**1 — Install the skills.** Copy the folders you want into your skills directory, one folder per skill (the folder name must match `name:` in the frontmatter):
+**1 — Install the skills.** Copy the folders you want into your agent's skills directory, one folder per skill (the folder name must match `name:` in the frontmatter):
 
 ```
 ~/.claude/skills/<name>/        or        ~/.workbuddy/skills/<name>/
 ```
+
+Those are the two directories the suite was exercised against. Any agent that reads `SKILL.md` works — see [Cross-agent](#cross-agent) for where each one expects the folder.
 
 **2 — Smoke-test the scripts, with no real data.** The fixtures in `skills/*/assets/samples/` are synthetic and exist for exactly this.
 
@@ -160,6 +162,7 @@ Three decisions that shape everything else:
 | `table_coords.py` side-by-side guard | v1.1 — two tables printed on one page can be merged into a single grid that passes the cell-count guard; needs an x-split or a two-block detector. Measured instance in `examples/cards/ho2020_ddpm.md` p.5 |
 | a real independent-SI example | v1.1 — every shipped card is `si-state: inline`, so the `independent` branch is exercised only by the synthetic xlsx+docx fixture. Needs a paper whose SI is a separate file, from a source that hosts one |
 | case library, expanded | planned — generalizable kernels only, private specifics stripped |
+| `workflow-pack` (companion) | **planned** — the operating layer the six skills are called from: four workflow sheets, the state files they write, the checklists that gate a stage, and the two rules the pipeline is run by (three-line delivery note, deviation log). A companion rather than a skill, because half of it is executed by a person |
 
 Two rows above set expectations, so read them before installing:
 
