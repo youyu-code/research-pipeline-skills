@@ -1,6 +1,10 @@
 ---
 name: research-ops
+agent_created: true
 description: >-
+  Scope: bookkeeping only. A request to summarise a paper, draft research text,
+  or answer a question about the research is out of scope even when it mentions
+  state files.
   Operating layer for a multi-stage research pipeline: maintains the scan cursor,
   push log, contradiction register, TODO list, and delivery format across stages.
   Use when the task is to update or reconcile pipeline state rather than to produce

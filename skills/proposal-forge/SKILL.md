@@ -1,5 +1,6 @@
 ---
 name: proposal-forge
+agent_created: true
 description: >-
   Forge a research proposal from an existing matrix and gap notes, then stress-test
   it through attack and review rounds. Use when the task is to write or harden a

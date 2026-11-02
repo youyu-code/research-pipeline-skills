@@ -1,5 +1,6 @@
 ---
 name: synthesis-matrix
+agent_created: true
 description: >-
   Turn a set of paper cards into a cross-paper matrix plus research-gap notes. Use
   when two or more cards already exist and the task is comparison — build the

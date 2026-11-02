@@ -1,5 +1,6 @@
 ---
 name: paper-card
+agent_created: true
 description: >-
   Build one structured paper card from one paper: extract full text from a PDF,
   classify supplementary-material status, transcribe tables with coordinate-based

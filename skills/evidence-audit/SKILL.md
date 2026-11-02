@@ -1,6 +1,9 @@
 ---
 name: evidence-audit
+agent_created: true
 description: >-
+  Scope: one claim, not one paper. Reviewing or grading a paper is out of
+  scope, even with its numbers quoted.
   Adjudicate one specific claim: is it supported, unsupported, or undecidable given
   the numbers actually available. Use when the input is a claim rather than a paper —
   a quoted sentence plus its reported figures — and the answer must be a verdict with

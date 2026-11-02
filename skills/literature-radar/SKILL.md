@@ -1,5 +1,6 @@
 ---
 name: literature-radar
+agent_created: true
 description: >-
   Periodic literature radar over arXiv (Atom API) or similar scholarly feeds: runs a
   keyword-scored scan for a fixed time window, emits a per-day digest, and
