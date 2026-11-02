@@ -1,0 +1,33 @@
+name: tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  suite:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.8", "3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # T4b reads `git log --all -p`; a shallow clone would scan one commit
+          # and report a pass it did not earn.
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: optional dependencies
+        # pypdf and pymupdf are optional by design: the suite reports SKIP when
+        # they are absent rather than failing. Do not turn this into a hard gate
+        # without changing that contract first.
+        run: python -m pip install "pypdf>=3.9" "pymupdf>=1.23" || echo "optional deps unavailable; the suite will report SKIP for those tests"
+
+      - name: run the suite
+        run: python tests/run_all.py -v

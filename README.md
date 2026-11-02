@@ -1,5 +1,7 @@
 # research-pipeline-skills
 
+[![tests](https://github.com/youyu-code/research-pipeline-skills/actions/workflows/tests.yml/badge.svg)](https://github.com/youyu-code/research-pipeline-skills/actions/workflows/tests.yml)
+
 Agent Skills (Anthropic format) for running a literature-driven research pipeline end to end — from daily paper tracking to an adversarially tested research proposal.
 
 ```
