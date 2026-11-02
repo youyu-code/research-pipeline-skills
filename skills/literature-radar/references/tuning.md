@@ -1,5 +1,15 @@
 # Tuning the keyword profile
 
+## Contents
+
+- [Four preconditions](#four-preconditions)
+- [The regression, and which results are real failures](#the-regression-and-which-results-are-real-failures)
+- [Defaults are behaviour](#defaults-are-behaviour)
+- [Word boundaries, on both sides](#word-boundaries-on-both-sides)
+- [Replaying the last corpus](#replaying-the-last-corpus)
+- [Counter-examples, collected](#counter-examples-collected)
+- [Checklist](#checklist)
+
 The profile is the recall/precision dial for the entire pipeline. Changing it is a small software change and a large data change, and the second half is what usually goes wrong.
 
 ## Four preconditions

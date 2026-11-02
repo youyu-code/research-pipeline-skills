@@ -1,5 +1,20 @@
 # Window definitions
 
+## Contents
+
+- [1. Window start — half-open](#1-window-start--half-open)
+- [2. Window end](#2-window-end)
+- [3. Daily block](#3-daily-block)
+- [4. File naming](#4-file-naming)
+- [5. Catch-up block](#5-catch-up-block)
+- [6. Hit-rate denominator](#6-hit-rate-denominator)
+- [7. C-grade](#7-c-grade)
+- [8. Cursor writeback](#8-cursor-writeback)
+- [9. Timestamp semantics](#9-timestamp-semantics)
+- [Recording the nine](#recording-the-nine)
+- [Counter-examples, collected](#counter-examples-collected)
+- [Checklist](#checklist)
+
 Nine terms. Each one, defined differently, changes which papers appear in the report — and none of them is self-evident.
 
 Write all nine down **before** the first query, in the run's own log. A window defined after the results arrive is a window fitted to the results.

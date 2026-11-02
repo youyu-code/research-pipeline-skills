@@ -1,5 +1,16 @@
 # Matrix structure
 
+## Contents
+
+- [Table A — comparison](#table-a--comparison)
+- [Verifiability tiers](#verifiability-tiers)
+- [A-notes — per-cell provenance](#a-notes--per-cell-provenance)
+- [Table B — relations](#table-b--relations)
+- [Table C — gaps](#table-c--gaps)
+- [Updating](#updating)
+- [Counter-examples, collected](#counter-examples-collected)
+- [Checklist](#checklist)
+
 Three tables, one file. Each answers a different question, and mixing them is how a matrix becomes a document nobody can update.
 
 | Table | Question | Failure if merged with another |

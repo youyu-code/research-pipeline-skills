@@ -1,5 +1,16 @@
 # State files
 
+## Contents
+
+- [1. Scan cursor](#1-scan-cursor)
+- [2. Push log](#2-push-log)
+- [3. Contradiction register](#3-contradiction-register)
+- [4. Open items](#4-open-items)
+- [Pointers, not copies](#pointers-not-copies)
+- [Read-only sources](#read-only-sources)
+- [Counter-examples, collected](#counter-examples-collected)
+- [Checklist](#checklist)
+
 Four artifacts, four schemas, one rule: **a fact lives in one file, and every other file points at it.**
 
 Two copies of a cursor diverge within a week. A pointer cannot diverge. When you find yourself writing the same fact into a second file, write the path instead.

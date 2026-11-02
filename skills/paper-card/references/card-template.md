@@ -1,5 +1,14 @@
 # Card template
 
+## Contents
+
+- [Skeleton](#skeleton)
+- [Section by section](#section-by-section)
+- [The three production notes (mandatory)](#the-three-production-notes-mandatory)
+- [Before you call the card done](#before-you-call-the-card-done)
+- [Filling rules that come up on nearly every card](#filling-rules-that-come-up-on-nearly-every-card)
+- [What must never appear in a card](#what-must-never-appear-in-a-card)
+
 Copy this file, fill it top to bottom, delete nothing. An empty field is a claim too — if you cannot fill one, write why, in the field.
 
 The skeleton follows `schema.md` v1 exactly; field names are a contract with `synthesis-matrix` and must not be renamed locally. What this file adds is **what to write in each slot**, and the three production notes that no schema can enforce.

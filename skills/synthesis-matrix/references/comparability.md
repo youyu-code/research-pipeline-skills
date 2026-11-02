@@ -1,5 +1,16 @@
 # Comparability
 
+## Contents
+
+- [Gate 1 — metric family](#gate-1--metric-family)
+- [Gate 2 — statistic](#gate-2--statistic)
+- [Gate 3 — measurement engine](#gate-3--measurement-engine)
+- [Gate 4 — provenance of the run](#gate-4--provenance-of-the-run)
+- [Noise bands, and how to get one](#noise-bands-and-how-to-get-one)
+- [Summary sentences versus the grid](#summary-sentences-versus-the-grid)
+- [Counter-examples, collected](#counter-examples-collected)
+- [Checklist](#checklist)
+
 Two numbers may share a column only if they answer the same question the same way. Four gates, in this order; failing any of them means the cells go in different columns, or the comparison is written as "not comparable" in the cell itself.
 
 | Gate | Question | Fails when |

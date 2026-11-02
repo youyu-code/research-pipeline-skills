@@ -1,5 +1,16 @@
 # Card schema — `v1`
 
+## Contents
+
+- [1. Header (mandatory)](#1-header-mandatory)
+- [2. Body sections (mandatory, in this order)](#2-body-sections-mandatory-in-this-order)
+- [3. Provenance shape (every number in `§4` / `§5`)](#3-provenance-shape-every-number-in-4--5)
+- [4. `si-contains` — the second question](#4-si-contains--the-second-question)
+- [5. To-be-filled section](#5-to-be-filled-section)
+- [6. Extraction log (mandatory)](#6-extraction-log-mandatory)
+- [7. Self-check line (last line of the card)](#7-self-check-line-last-line-of-the-card)
+- [Changelog](#changelog)
+
 > **Version:** v1 · 2026-10-26 · **Owner:** `paper-card` (this file is the single definition)
 > **Consumer:** `synthesis-matrix` declares "consumes card schema v1" and does not restate fields.
 >
