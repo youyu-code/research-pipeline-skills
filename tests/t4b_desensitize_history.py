@@ -30,7 +30,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from _desens import (  # noqa: E402
-    BLACKLIST, USER_TOKEN, canary, git, is_scanner_source, load_blacklist, scan_line,
+    BLACKLIST, SKIPPED, USER_TOKEN, canary, git, is_scanner_source, load_blacklist,
+    scan_line,
 )
 
 MAX_REPORT = 40
@@ -59,7 +60,12 @@ def main() -> int:
         print("T4b  FAIL")
         return 1
     print("  ok    scanner canary           planted leak detected%s"
-          % ("" if USER_TOKEN else " (class 3 skipped: no account name derivable)"))
+          % ("" if USER_TOKEN else " (class 3 skipped, see below)"))
+    for cls, label, why in SKIPPED:
+        print("  SKIP  class [%s] %-16s %s — not scanned" % (cls, label, why))
+    if not USER_TOKEN and not SKIPPED:
+        print("  SKIP  class [3] account name       getpass empty and USERNAME/USER "
+              "unset — not scanned")
 
     code, patch = history_patch()
     if code != 0:

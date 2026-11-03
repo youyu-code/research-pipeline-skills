@@ -37,8 +37,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from _desens import (  # noqa: E402
-    BLACKLIST, ROOT, USER_TOKEN, canary, is_scanner_source, load_blacklist, read_text,
-    scan_text, tracked_files,
+    BLACKLIST, ROOT, SKIPPED, USER_TOKEN, canary, is_scanner_source, load_blacklist,
+    read_text, scan_text, tracked_files,
 )
 
 
@@ -63,8 +63,11 @@ def main() -> int:
     else:
         print("  ok    scanner canary           planted leak detected in classes 1/4/5 "
               "and the fingerprint probe; class 3 skipped")
-        print("  SKIP  account-name check       no local account name could be derived "
-              "(getpass empty, USERNAME/USER unset) — class 3 not scanned")
+        for cls, label, why in SKIPPED:
+            print("  SKIP  class [%s] %-16s %s — not scanned" % (cls, label, why))
+        if not SKIPPED:
+            print("  SKIP  class [3] account name       no local account name could be "
+                  "derived (getpass empty, USERNAME/USER unset) — not scanned")
 
     files, how = tracked_files()
     print("  ok    input                    %d file(s) via %s" % (len(files), how))

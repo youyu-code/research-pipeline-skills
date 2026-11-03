@@ -29,6 +29,19 @@ SKIP_DIRS = {".git", ".workbuddy", ".codebuddy", "notes", "__pycache__", ".venv"
 BINARY_SUFFIXES = {".pdf", ".xlsx", ".docx", ".png", ".jpg", ".jpeg", ".webp", ".zip", ".pyc"}
 
 
+# Account names that belong to the environment rather than to a person: CI images
+# run as `runner`, containers often as `root`. Class 3 exists to catch a
+# *personal* account name, which is distinctive; a placeholder has no owner to
+# protect, and matching it turns ordinary English ("the runner that applies
+# them", README.md at f258193) into a failure. The first CI run of this suite
+# failed on exactly that word.
+GENERIC_ACCOUNTS = frozenset({
+    "runner", "root", "ubuntu", "admin", "administrator", "user", "users",
+    "node", "build", "docker", "container", "jenkins", "circleci", "travis",
+    "vsts", "appveyor", "vagrant", "ec2-user", "default",
+})
+
+
 def local_account_name() -> str:
     """The account name of the machine running the test, derived at runtime.
 
@@ -46,7 +59,15 @@ def local_account_name() -> str:
     return name.strip()
 
 
-USER_TOKEN = local_account_name()
+FOUND_ACCOUNT = local_account_name()
+USER_TOKEN = "" if FOUND_ACCOUNT.lower() in GENERIC_ACCOUNTS else FOUND_ACCOUNT
+
+# Printed by both T4 scripts. A class that silently stops running is a guarantee
+# the reader of a green result would still assume, so the reason travels with it.
+SKIPPED = ([("3", "account name",
+             "account name %r belongs to the environment, not to a person"
+             % FOUND_ACCOUNT)]
+           if FOUND_ACCOUNT and not USER_TOKEN else [])
 
 
 def build_patterns() -> tuple:
