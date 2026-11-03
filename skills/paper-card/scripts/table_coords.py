@@ -28,11 +28,10 @@ import argparse
 import os
 import sys
 
-try:
+try:  # optional at --help time, required for a run; checked after parsing
     import pymupdf
 except ImportError:  # pragma: no cover
-    print("ERROR: pymupdf is required (pip install pymupdf)", file=sys.stderr)
-    raise SystemExit(2)
+    pymupdf = None
 
 
 def build_rows(words: list, row_tol: float) -> list:
@@ -90,6 +89,9 @@ def main(argv=None) -> int:
     ap.add_argument("--quiet", action="store_true", help="write files only")
     args = ap.parse_args(argv)
 
+    if pymupdf is None:
+        print("ERROR: pymupdf is required (pip install pymupdf)", file=sys.stderr)
+        return 2
     if not os.path.isfile(args.pdf):
         print("ERROR: pdf not found: %s" % args.pdf, file=sys.stderr)
         return 2

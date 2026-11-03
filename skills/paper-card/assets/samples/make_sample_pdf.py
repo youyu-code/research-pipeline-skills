@@ -19,8 +19,12 @@ from __future__ import annotations
 
 import argparse
 import os
+import sys
 
-import pymupdf
+try:  # optional at --help time, required to write the file; checked in main
+    import pymupdf
+except ImportError:  # pragma: no cover
+    pymupdf = None
 
 COLS = [50, 170, 290]
 HEADER = ["Model", "MSE", "CI"]
@@ -44,6 +48,9 @@ def main(argv=None) -> int:
     ap.add_argument("--out", default=".", help="output directory")
     ap.add_argument("--name", default="synthetic_paper.pdf", help="output filename")
     args = ap.parse_args(argv)
+    if pymupdf is None:
+        print("ERROR: pymupdf is required (pip install pymupdf)", file=sys.stderr)
+        return 2
     os.makedirs(args.out, exist_ok=True)
 
     doc = pymupdf.open()
