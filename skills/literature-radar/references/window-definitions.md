@@ -11,13 +11,15 @@
 - [7. C-grade](#7-c-grade)
 - [8. Cursor writeback](#8-cursor-writeback)
 - [9. Timestamp semantics](#9-timestamp-semantics)
-- [Recording the nine](#recording-the-nine)
+- [10. Announcement batch](#10-announcement-batch)
+- [11. Backfill hole](#11-backfill-hole)
+- [Recording the eleven](#recording-the-eleven)
 - [Counter-examples, collected](#counter-examples-collected)
 - [Checklist](#checklist)
 
-Nine terms. Each one, defined differently, changes which papers appear in the report — and none of them is self-evident.
+Eleven terms. Each one, defined differently, changes which papers appear in the report — and none of them is self-evident.
 
-Write all nine down **before** the first query, in the run's own log. A window defined after the results arrive is a window fitted to the results.
+Write all eleven down **before** the first query, in the run's own log. A window defined after the results arrive is a window fitted to the results.
 
 ---
 
@@ -91,9 +93,51 @@ Which timestamp the window filters on: **submitted**, **published**, or **update
 
 If revisions are the goal, report them as revisions — a separate block, with the original submission date beside the revision date.
 
+## 10. Announcement batch
+
+A feed is not continuous. Items are released in batches tied to working days, so an empty result for a day has two readings that look identical: **nothing was submitted**, or **the batch for that day does not exist yet**.
+
+The readings demand opposite actions. "Nothing was submitted" advances the cursor and closes the day. "Not materialized yet" must **not** advance it, because the batch may still arrive and this window is the only thing that will ever return those items.
+
+**Rule:** every run records `E` and the **global ceiling** `C` — the newest timestamp present in the response from any source, before filtering by your profile. Then assert:
+
+```
+C >= E - L     materialized: an empty result is a real empty
+C <  E - L     not materialized: advance the cursor to C, keep [C, E) as a catch-up gap
+```
+
+`L` is the largest announcement lag observed for that feed, written down once and revised when it is exceeded. It is not a guess — it is the number the run log has been recording all along, used as a threshold instead of a footnote.
+
+The distinction is not academic: a batch that arrives two days late is invisible to every later window, because later windows start where this one ended.
+
+**Counter-example:** a run reported "no new submissions" for a day and advanced the cursor. That day's batch landed two days later with eight items. Every subsequent window started after that day, so re-querying never saw them; they surfaced three weeks later only because a backfill happened to overlap the old range.
+
+**What this does not decide.** It tells you the window is not ready; it does not tell you why. A globally frozen feed and a single late batch both show an old ceiling, so record the ceiling in the log and compare it across runs rather than reasoning from one value.
+
+## 11. Backfill hole
+
+Items can enter a feed with a `published` timestamp **older than `S`**. A `[S, E)` window will never return them, however many times it is run.
+
+Three mechanisms produce that symptom and need different handling:
+
+| Mechanism | Signature | Recoverable by |
+|---|---|---|
+| late announcement or cross-list | `published` shortly before `S`, `updated` ≈ `published` | re-scanning `[S − W, S)` |
+| revision | `updated` inside the window, `published` long before | a block filtered on `updated`, never on `published` |
+| re-numbering | same work, different ID, either date | title fingerprint; no ID rule can see it |
+
+**Rule:** each run also emits two blocks, neither counted in the new-item total:
+
+1. **revision block** — `updated ∈ [S, E) AND published < S`. This is §9's "report revisions as revisions", given a query shape.
+2. **late-arrival sweep** — `published ∈ [S − W, S)`, admitted at A/B only, labelled late arrival.
+
+**State the bound.** The sweep covers lags up to `W` and nothing longer. An item announced three weeks late is not recovered by it; that is §10's job, at the source. A sweep is a second chance, not a guarantee — a report claiming "no losses" on the strength of a two-day sweep is claiming coverage it does not have.
+
+**Counter-example:** five missed items were carried for a month as one number — "5 losses, one decision". They were in fact one revision, two items announced within four days, and two announced more than three weeks late. No single fix could move that number, so every proposed fix was judged against a total it could not clear, and none was adopted. Partitioning the bucket was the fix; the bucket was the defect.
+
 ---
 
-## Recording the nine
+## Recording the eleven
 
 ```yaml
 window:
@@ -107,6 +151,10 @@ window:
   hit-rate-denominator: after-dedup
   c-grade: anchor-or-two-keywords
   cursor-writeback: window-end
+  batch-lag-max: 2d                   # L in §10, the assertion threshold
+  ceiling: 2026-01-07T05:12Z          # C in §10, recorded before filtering
+  revision-block: updated-in-window   # §11, reported separately
+  late-arrival-sweep: 2d              # §11, W; state it, do not imply more
 ```
 
 A run that cannot fill this block has not defined its window; it has only picked two dates.
@@ -122,6 +170,8 @@ A run that cannot fill this block has not defined its window; it has only picked
 | "hit rate 12%" | three possible denominators, one unstated |
 | filtering on `updated`, reporting as new | counts revisions as discoveries |
 | catch-up run labelled as a normal day | corrupts every per-day series computed from it |
+| empty result read as "nothing was submitted" | closes a day whose batch had not been generated |
+| "no losses" after a 72-hour sweep | claims a coverage bound of three weeks with a three-day instrument |
 
 ## Checklist
 
@@ -132,3 +182,5 @@ A run that cannot fill this block has not defined its window; it has only picked
 - [ ] Hit rate carries its denominator.
 - [ ] C-grade is a matching rule, not a judgement.
 - [ ] Cursor writes back the window end, with per-source floors recorded separately.
+- [ ] The ceiling is recorded and compared against `E − L` before the cursor moves.
+- [ ] Revision and late-arrival blocks are separate, and neither is counted as new.

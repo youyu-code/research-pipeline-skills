@@ -28,11 +28,17 @@ Before proposing any change, establish what the current profile actually does, f
 
 The measurement needs three numbers: **items recovered**, **items newly admitted (false positives)**, and **the corpus and window used**. Without all three the number is an anecdote.
 
-### 3 — One item at a time, confirmed
+### 3 — Measure one at a time, approve in one batch
 
-Terms interact. A batch of eight additions produces a result nobody can attribute, and if the batch regresses, the only remedy is to remove all eight and lose whatever was working.
+Terms interact, so **measurement** is per item: a batch of eight additions produces a result nobody can attribute, and if it regresses the only remedy is to remove all eight and lose whatever was working.
 
-**Counter-example:** six terms added in one commit; the regression showed a 9% loss of previously-pushed items. Removing all six restored the baseline, and the three terms that were actually beneficial were lost with them.
+**Approval is a different unit.** Requiring a separate decision per candidate, each waiting for its own confirmation and its own repeat observation, is how a profile stays unchanged for a month while the miss log fills up. The unit of approval is one batch in which every item carries its own delta (§2): one yes, N tables.
+
+**Counter-example 1 — measuring at batch granularity:** six terms added in one commit; the regression showed a 9% loss of previously-pushed items. Removing all six restored the baseline, and the three terms that were actually beneficial were lost with them.
+
+**Counter-example 2 — approving at item granularity:** each candidate waited for its own confirmation and for a repeat observation before it qualified. Five misses were logged over five weeks, several candidates were quantified, none was ever presented as a decision, and the profile ended the period exactly as it began. Per-item approval did not make the change safer; it made the change never happen.
+
+**The rejection line is a delta, not a count.** A term whose delta shows unexplained lost items is rejected however often it has been missed; a term with no measured cost is not admitted however short it is. Frequency is evidence that something is missing, never evidence that this particular string is the fix.
 
 ### 4 — Regression before and after
 
