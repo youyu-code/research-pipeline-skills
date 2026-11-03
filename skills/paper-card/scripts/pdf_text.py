@@ -93,7 +93,23 @@ def _pymupdf(path: str, mode: str) -> list:
     return out
 
 
-def _write_unreadable(args, reason: str) -> int:
+def _truncated(path: str, tail: int = 2048) -> bool:
+    """A complete PDF ends with `%%EOF`; a file cut off mid-stream does not.
+
+    Checked before the reader runs, because readers are forgiving in the wrong
+    direction: PyMuPDF opens a truncated file, returns whichever pages it can
+    still parse, and raises nothing. The extraction then looks successful and
+    the missing pages are never mentioned — the B-17 failure with a non-zero
+    page count, which is harder to notice than a crash.
+    """
+    with open(path, "rb") as fh:
+        fh.seek(0, os.SEEK_END)
+        size = fh.tell()
+        fh.seek(max(0, size - tail))
+        return b"%%EOF" not in fh.read()
+
+
+def _write_unreadable(args, reason: str, hint: str = "") -> int:
     """Record a non-extraction in the same report format, then stop."""
     health = {
         "pdf": os.path.basename(args.pdf),
@@ -111,9 +127,10 @@ def _write_unreadable(args, reason: str) -> int:
         json.dump(health, fh, ensure_ascii=False, indent=1)
     if not args.quiet:
         print("mode=%-6s verdict=unreadable  %s" % (args.mode, reason), file=sys.stderr)
-    print("HINT: the file is damaged or incomplete, not empty. Try --mode text (PyMuPDF "
-          "repairs some structures); if the page count is still 0, fetch the file again "
-          "and do not read anything from this copy (B-17).", file=sys.stderr)
+    print(hint or ("HINT: the file is damaged or incomplete, not empty. Try --mode text "
+                   "(PyMuPDF repairs some structures); if the page count is still 0, fetch "
+                   "the file again and do not read anything from this copy (B-17)."),
+          file=sys.stderr)
     return 3
 
 
@@ -136,6 +153,13 @@ def main(argv=None) -> int:
         print("ERROR: pdf not found: %s" % args.pdf, file=sys.stderr)
         return 2
     os.makedirs(args.out, exist_ok=True)
+
+    if _truncated(args.pdf):
+        return _write_unreadable(
+            args, "no %%EOF in the last 2 KiB: the byte stream ends before the file does",
+            hint="HINT: the download was cut off, so every page after the cut is missing "
+                 "and the ones that survived are not the whole paper. Fetch it again; do "
+                 "not read anything from this copy (B-17).")
 
     try:
         if args.mode == "layout":
